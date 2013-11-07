@@ -1,0 +1,31 @@
+<% if results.facet(facet).present? && results.facet(facet).rows && results.facet(facet).rows.count > 0 || params[:search_form][facet].present? %>
+  <h3><%=t "redsun.facet.#{facet.to_sym}"%></h3>
+    <style>
+      ul.facets {
+          max-height: 200px;
+          overflow: scroll;
+      }
+    </style>
+
+  <ul class="facets">
+  <% results.facet(facet.to_sym).rows.each do |result| %>
+    <li>
+      <% if (attribute.present? && ar_object.present?) %>
+          <% label = ar_object.find(result.value).send(attribute.to_sym) %>
+          <%= link_to((label.present? ? label : "unknown" ) + " (#{result.count})",
+          url_for(:controller => "redsun_search", :action => :index, :search_form => {facet.to_sym => result.value}.reverse_merge(params[:search_form])))
+          %>
+
+      <% else %>
+        <%= link_to "#{t('facets.values.'+result.value.to_s.tr(" ", "_"), :default => result.value)} (#{result.count})",
+        url_for(:controller => "redsun_search", :action => :index, :search_form => {facet.to_sym => result.value}.reverse_merge(params[:search_form]))
+        %>
+      <% end %>
+
+      <%= link_to t("facet.remove"),
+      url_for(:controller => "redsun_search", :action => :index, :search_form => { facet.to_sym => "" }.reverse_merge(params[:search_form])),
+      :class => "remove" if params[:search_form][facet].present?  %>
+    </li>
+    <% end -%>
+  </ul>
+<% end -%>

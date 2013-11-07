@@ -1,0 +1,20 @@
+<h2><%= t "redsun.header"%></h2>
+<%= form_for("search_form", :url => { :controller => :redsun_search, 
+                                      :action => :index,
+                                      :page => nil,
+                                      :project_id => @project.id}, 
+                                      :html => { :style => "border: 1px solid #e9e9e9; padding: 1em; background: #f4f4f4; display: block", :method => :get }) do |f| %>
+  <%= f.label t("redsun.searchstring")%>
+  <%= f.text_field(:searchstring, :value => @searchstring, :title => "Search ...", :class => "toggle") %>
+  <%= f.label t("redsun.order") %>
+  <%= f.select :sort_field, Issue::SORT_FIELDS.collect { |o| [t("field_#{o}"), o]}, :selected => @sort_field %>
+  <%= f.select :sort_order, Issue::SORT_ORDER.collect {|o| [I18n.translate(o[1]), o.first]}, :selected => @sort_order %>
+  <%= f.submit "Search" %>
+  <%= link_to t("redsun.reset"), url_for(:controller => "redsun_search", :action => :index, :project_id => params[:project_id])%>
+<% end -%>
+
+<% if @search.results.present? %>
+  <%= render "results" %>
+<% else %>
+     <p><%= t "redsun.no_results" %></p>
+<% end %>

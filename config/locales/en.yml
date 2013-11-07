@@ -1,0 +1,16 @@
+# English strings go here for Rails i18n
+en:
+  redsun:
+    header: "Solr Search by RedSun"
+    searchstring: "Search terms"
+    order: Sort by
+    no_results: "Sorry, no results found."
+    reset: "Reset"
+    facet:
+      remove: "- remove"
+      created_on: "Created On"
+      author_id: "Author"
+      status_id: "Status"
+      tracker_id: "Tracker"
+      priority_id: "Prioritiy"
+      assigned_to_id: "Assigned to"

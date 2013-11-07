@@ -1,0 +1,22 @@
+de:
+  redsun:
+    header: "Solr-Suche"
+    searchstring: "Suchbegriffe"
+    order: Sortierung
+    no_results: "Es konnten leider keine Suchergebnisse gefunden werden."
+    reset: "Zurücksetzen"
+    facet:
+      remove: "- entfernen"
+      created_on: "Erstellt innerhalb"
+      updated_on: "Aktualisierungdatum"
+      date_range_rows:
+        last_7_days: "der letzten 7 Tage"
+        last_month: "der letzten 30 Tage"
+        last_3_months: "der letzten 3 Monate"
+        last_6_months: "der letzten 3 Monate"
+        last_6_months: "Vor mehr als einem Jahr"
+      author_id: "Autor"
+      status_id: "Status"
+      tracker_id: "Tracker"
+      priority_id: "Priorität"
+      assigned_to_id: "Zugewiesen an"

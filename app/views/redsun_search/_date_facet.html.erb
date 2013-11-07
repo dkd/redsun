@@ -1,0 +1,27 @@
+<% if results.facet(facet).present? && results.facet(facet).rows && results.facet(facet).rows.count > 0 || params[:search_form][facet].present? %>
+  <h3><%=t "redsun.facet.#{facet.to_sym}"%></h3>
+    <style>
+      ul.facets {
+          max-height: 200px;
+          overflow: scroll;
+      }
+    </style>
+
+  <ul class="facets">
+  <% results.facet(facet.to_sym).rows.each do |result| %>
+    
+      <% if params[:search_form][facet].blank? || params[:search_form].present? && params[:search_form][facet].present? && params[:search_form][facet] == result.value  %>
+      <li>
+          <% label = t("redsun.facet.date_range_rows.#{result.value}") %>
+          <%= link_to((label.present? ? label : "unknown" ) + " (#{result.count})",
+          url_for(:controller => "redsun_search", :action => :index, :search_form => {facet.to_sym => result.value}.reverse_merge(params[:search_form])))
+          %>
+          <%= link_to t("facet.remove"),
+          url_for(:controller => "redsun_search", :action => :index, :search_form => { facet.to_sym => "" }.reverse_merge(params[:search_form])),
+          :class => "remove" if params[:search_form][facet].present?  %>
+          </li>
+      <% end %>
+
+    <% end -%>
+  </ul>
+<% end -%>
