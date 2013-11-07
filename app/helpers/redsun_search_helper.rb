@@ -1,7 +1,7 @@
 module RedsunSearchHelper
 
-  def facet(name, results, attribute = nil, ar_object = nil, partial = "facet")
-    render :partial => partial, :locals => { :facet => name, :results => results, :attribute => attribute, :ar_object => ar_object }
+  def facet(name, results, attribute = nil,  partial = "facet")
+    render :partial => partial, :locals => { :facet => name, :results => results, :attribute => attribute }
   end
 
   def highlighter_for(field, hit, record)

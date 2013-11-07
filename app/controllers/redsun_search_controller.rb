@@ -29,8 +29,8 @@ class RedsunSearchController < ApplicationController
 
       query.with(:project_id).any_of(allowed_projects)
       %w(author_id assigned_to_id status_id tracker_id priority_id).each do |easy_facet|
-        query.facet easy_facet, :minimum_count => 2
-        if params[:search_form].present? && params[:search_form][easy_facet].present?
+        query.facet easy_facet, :minimum_count => 1
+        if params.has_key?(:search_form) && params[:search_form][easy_facet].present?
           query.with(easy_facet, params[:search_form][easy_facet])
         end
       end

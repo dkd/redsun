@@ -10,8 +10,8 @@
   <ul class="facets">
   <% results.facet(facet.to_sym).rows.each do |result| %>
     <li>
-      <% if (attribute.present? && ar_object.present?) %>
-          <% label = ar_object.find(result.value).send(attribute.to_sym) %>
+      <% if (attribute.present? && result.instance.present?) %>
+          <% label = result.instance.send(attribute.to_sym) %>
           <%= link_to((label.present? ? label : "unknown" ) + " (#{result.count})",
           url_for(:controller => "redsun_search", :action => :index, :search_form => {facet.to_sym => result.value}.reverse_merge(params[:search_form])))
           %>

@@ -3,28 +3,27 @@
   <%= will_paginate @search.results %>
 </div>
 <ul>
-   <% @search.each_hit_with_result do |hit, issue| %>
-     <li>
-       <%= hit.score %>
-       <h3><%= link_to highlighter_for(:subject, hit, issue), issue %>
-         <small>
-         <br />
-         <%= distance_of_time_in_words Time.now, issue.updated_on %> | <%= issue.author.login%></small></h3>
-       <p>
-         <%= hit.highlights(:description).collect { |segment| segment.format { |word| "<span class='highlight'>#{word}</span>" }}.join(" ").html_safe %>
-       </p>
-     </li>
-   <% end %>
+  <% @search.each_hit_with_result do |hit, issue| %>
+    <li>
+      <%= hit.score %>
+      <h3><%= link_to highlighter_for(:subject, hit, issue), issue %>
+        <small>
+        <br />
+        <%= distance_of_time_in_words Time.now, issue.updated_on %> | <%= issue.author.login%></small></h3>
+      <p>
+        <%= hit.highlights(:description).collect { |segment| segment.format { |word| "<span class='highlight'>#{word}</span>" }}.join(" ").html_safe %>
+      </p>
+    </li>
+  <% end %>
  </ul>
- <div style="text-align:center">
-   <%= will_paginate @search.results %>
- </div>
- <% content_for :sidebar do %>
-  <%= facet(:author_id, @search, :login, User) %>
-  <%= facet(:status_id, @search, :name, IssueStatus) %>
-  <%= facet(:tracker_id, @search, :name, Tracker) %>
-  <%= facet(:priority_id, @search, :name, IssuePriority) %>
-  <%= facet(:created_on, @search, :created_on, Issue, "date_facet") %>
-  <%= facet(:updated_on, @search, :updated_on, Issue, "date_facet") %>
-  
- <% end %>
+<div style="text-align:center">
+ <%= will_paginate @search.results %>
+</div>
+<% content_for :sidebar do %>
+  <%= facet(:author_id, @search, :login) %>
+  <%= facet(:status_id, @search, :name) %>
+  <%= facet(:tracker_id, @search, :name) %>
+  <%= facet(:priority_id, @search, :name) %>
+  <%= facet(:created_on, @search, :created_on, "date_facet") %>
+  <%= facet(:updated_on, @search, :updated_on, "date_facet") %>
+<% end %>
