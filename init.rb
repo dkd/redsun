@@ -23,4 +23,5 @@ Rails.configuration.to_prepare do
     SearchController.send(:include, RedmineRedsun::SearchControllerPatch) 
   end
   Issue.send(:include, RedmineRedsun::IssuePatch) unless Issue.included_modules.include? RedmineRedsun::IssuePatch
+  WikiPage.send(:include, RedmineRedsun::WikiPagePatch) unless WikiPage.included_modules.include? RedmineRedsun::WikiPagePatch
 end

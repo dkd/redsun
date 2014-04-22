@@ -1,0 +1,9 @@
+<h5><%= t "Wiki" %> <small><%= hit.score %></small></h5>
+<h3><%= link_to highlighter_for(:title, hit, record).gsub(/_/, " "), record %>
+<small>
+<br />
+<%= distance_of_time_in_words Time.now, record.updated_on %> | <%= record.content.author.login %></small></h3>
+<p>
+  <%= hit.highlights(:wiki_content).collect { |segment| segment.format { |word| "<span class='highlight'>#{word}</span>" }}.join(" ").html_safe %>
+</p>
+<hr>

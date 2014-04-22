@@ -12,24 +12,30 @@ class RedsunSearchController < ApplicationController
       searchstring = ""
     end
 
-    allowed_projects = []
+    @allowed_issue_trackers = []
+    @allowed_wikis = []
     if params[:project_id].present?
       @project = Project.find(params[:project_id])
-      allowed_projects << @project.id if User.current.allowed_to?(:view_issues, @project)
+      @allowed_issue_trackers << @project.id if User.current.allowed_to?(:view_issues, @project)
+      @allowed_wikis << @project.id if User.current.allowed_to?(:view_wiki_pages, @project)
     else
-      allowed_projects = User.current.projects.collect { |project| project.id if User.current.allowed_to?(:view_issues, project) }.compact
+      @allowed_issue_trackers = User.current.projects.collect { |project| project.id if User.current.allowed_to?(:view_issues, project) }.compact
+      @allowed_wikis << User.current.projects.collect { |project| project.id if User.current.allowed_to?(:view_wiki_pages, project) }.compact
     end
 
-    @search = Sunspot.search(Issue) do |query|
-
+    @search = Sunspot.search(Issue, WikiPage) do |query|
       query.fulltext searchstring do
         highlight :description
         highlight :subject
+        highlight :wiki_content
+      end
+      
+      if @project.present?
+        query.with(:project_id, @project.id)
       end
 
-      query.with(:project_id).any_of(allowed_projects)
-      %w(author_id assigned_to_id status_id tracker_id priority_id).each do |easy_facet|
-        query.facet easy_facet, :minimum_count => 1
+      %w(author_id assigned_to_id status_id tracker_id priority_id class_name).each do |easy_facet|
+        query.facet easy_facet, :minimum_count => 2
         if params.has_key?(:search_form) && params[:search_form][easy_facet].present?
           query.with(easy_facet, params[:search_form][easy_facet])
         end
@@ -65,6 +71,9 @@ class RedsunSearchController < ApplicationController
 
     end
     @searchstring = searchstring
+
+    #@search = @search.results.select {|r| @allowed_issue_trackers.include? r.project_id}
+    @authorized_search = @search.results.select {|r| @allowed_issue_trackers.include?(r.project_id)|| @allowed_wikis.include?(r.project_id)}
     #rescue
     #  render :text => "Oh no, the Solr server is gone?!", :layout => true
     #end

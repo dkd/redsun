@@ -1,0 +1,9 @@
+<h5><%= t "Issue" %> <small><%= hit.score %></small></h5>
+<h3><%= link_to highlighter_for(:subject, hit, record), record %>
+  <small>
+  <br />
+  <%= distance_of_time_in_words Time.now, record.updated_on %> | <%= record.author.login%></small></h3>
+<p>
+  <%= hit.highlights(:description).collect { |segment| segment.format { |word| "<span class='highlight'>#{word}</span>" }}.join(" ").html_safe %>
+</p>
+<hr>

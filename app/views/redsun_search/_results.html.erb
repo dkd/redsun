@@ -1,21 +1,16 @@
-<br /><%= page_entries_info @search.results %>
+<br><%= page_entries_info @search.results, {model: "record"} %>
 <div style="text-align:center;">
   <%= will_paginate @search.results %>
 </div>
-<ul>
-  <% @search.each_hit_with_result do |hit, issue| %>
-    <li>
-      <%= hit.score %>
-      <h3><%= link_to highlighter_for(:subject, hit, issue), issue %>
-        <small>
-        <br />
-        <%= distance_of_time_in_words Time.now, issue.updated_on %> | <%= issue.author.login%></small></h3>
-      <p>
-        <%= hit.highlights(:description).collect { |segment| segment.format { |word| "<span class='highlight'>#{word}</span>" }}.join(" ").html_safe %>
-      </p>
-    </li>
-  <% end %>
- </ul>
+Allowed Wikis: <%= @allowed_wikis %><br>
+Allowed Projects for Issues: <%= @allowed_issue_trackers %>
+<%
+@search2 = @search.each_hit_with_result.collect {|hit, record| [hit, record] if (@allowed_issue_trackers.include?(record.project_id) || @allowed_wikis.include?(record.project_id))}
+%>
+<% @search.each_hit_with_result do |hit, record| %>
+  <%= render "#{hit.class_name.underscore}_result", hit: hit, record: record %>
+<% end %>
+
 <div style="text-align:center">
  <%= will_paginate @search.results %>
 </div>
@@ -26,4 +21,5 @@
   <%= facet(:priority_id, @search, :name) %>
   <%= facet(:created_on, @search, :created_on, "date_facet") %>
   <%= facet(:updated_on, @search, :updated_on, "date_facet") %>
+  <%= facet(:class_name, @search, :class_name) %>
 <% end %>

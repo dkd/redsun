@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require_dependency 'issue'
 
 # Patches Redmine's User dynamically.
@@ -13,19 +14,26 @@ module RedmineRedsun
         unloadable # Send unloadable so it will not be unloaded in development
 
         searchable do
+          
+          # Class Name
+          string :class_name, stored: true
           # Issue ID
           integer :id
           # Tracker
           integer :tracker_id, :references => Tracker
           # Subject
-          text :subject, :stored => true, :boost => 9
+          text :subject, :stored => true, :boost => 9 do
+            subject.scan(/[[:print:]]/).join if subject.present?
+          end
           # Description
-          text :description, :stored => true, :boost => 7
+          text :description, :stored => true, :boost => 7 do
+            description.scan(/[[:print:]]/).join if description.present?
+          end
           # Project ID
           integer :project_id
           # Journals entries, i.e. status updates, comments, etc.
           text :journals do
-            journals.map { |j| j.notes }
+            journals.map { |j| j.notes.scan(/[[:print:]]/).join if j.notes.present? }
           end
           # Updated at
           time :updated_on, :trie => true
@@ -42,8 +50,6 @@ module RedmineRedsun
           time :due_date, :trie => true
           # Priority
           integer :priority_id, :references => IssuePriority
-          # Estimated hours
-          # FIXME
           # Assigned to
           integer :assigned_to_id, :references => User
           # Category
@@ -60,6 +66,11 @@ module RedmineRedsun
     module InstanceMethods
       SORT_FIELDS = ["updated_on", "created_on", "score"]
       SORT_ORDER = [["ASC", "label_ascending"],["DESC", "label_descending"]]
+      
+      def class_name
+        self.class.name
+      end
+      
     end
 
   end
