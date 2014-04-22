@@ -12,50 +12,61 @@ class RedsunSearchController < ApplicationController
       searchstring = ""
     end
 
-    @allowed_issue_trackers = []
-    @allowed_wikis = []
+    allowed_issues = [0]
+    allowed_wikis = [0]
+
     if params[:project_id].present?
       @project = Project.find(params[:project_id])
-      @allowed_issue_trackers << @project.id if User.current.allowed_to?(:view_issues, @project)
-      @allowed_wikis << @project.id if User.current.allowed_to?(:view_wiki_pages, @project)
+      allowed_issues << @project.id if User.current.allowed_to?(:view_issues, @project)
+      allowed_wikis << @project.id if User.current.allowed_to?(:view_wiki_pages, @project)
     else
-      @allowed_issue_trackers = User.current.projects.collect { |project| project.id if User.current.allowed_to?(:view_issues, project) }.compact
-      @allowed_wikis << User.current.projects.collect { |project| project.id if User.current.allowed_to?(:view_wiki_pages, project) }.compact
+      allowed_issues = User.current.projects.collect { |project| project.id if User.current.allowed_to?(:view_issues, project) }.compact
+      allowed_wikis << User.current.projects.collect { |project| project.id if User.current.allowed_to?(:view_wiki_pages, project) }.compact
     end
-
-    @search = Sunspot.search(Issue, WikiPage) do |query|
-      query.fulltext searchstring do
+    
+    sort_order = @sort_order
+    sort_field = @sort_field
+    
+    @search = Sunspot.search(Issue, WikiPage) do
+      fulltext searchstring do
         highlight :description
         highlight :subject
         highlight :wiki_content
       end
-      
-      if @project.present?
-        query.with(:project_id, @project.id)
+
+      any_of do
+        all_of do
+          with :class, Issue
+          with(:project_id).any_of allowed_issues 
+        end
+        all_of do
+          with :class, WikiPage
+          with(:project_id).any_of allowed_wikis
+        end
       end
 
       %w(author_id assigned_to_id status_id tracker_id priority_id class_name).each do |easy_facet|
-        query.facet easy_facet, :minimum_count => 2
+        facet easy_facet, :minimum_count => 2
         if params.has_key?(:search_form) && params[:search_form][easy_facet].present?
-          query.with(easy_facet, params[:search_form][easy_facet])
+          with(easy_facet, params[:search_form][easy_facet])
         end
       end
       
-      conditions = date_conditions(query, :created_on)
+      conditions = date_conditions(:created_on)
       
       %w(created_on updated_on).each do |date_facet|
         if params[:search_form].present? && params[:search_form][date_facet.to_sym].present?
           date_range = conditions.collect { |c| c[:date] if (c[:name].to_s == params[:search_form][date_facet.to_sym]) }.compact.first
-          query.with(date_facet.to_sym).greater_than(date_range) unless date_range.nil?
+          with(date_facet.to_sym).greater_than(date_range) unless date_range.nil?
         end
       end
 
       # Pagination
-      query.paginate(:page =>  params[:page], :per_page => 15)
+      paginate(:page =>  params[:page], :per_page => 15)
       
       # Created on facet
       
-      query.facet :created_on do
+      facet :created_on do
         conditions.each do |condition|
           row(condition[:name].to_s) do
             with(:created_on).greater_than condition[:date]
@@ -66,17 +77,11 @@ class RedsunSearchController < ApplicationController
         end
       end
 
-      query.order_by(@sort_field.to_sym, @sort_order.downcase.to_sym)
-      query.order_by(:score, :desc)
+      order_by(sort_field.to_sym, sort_order.downcase.to_sym)
+      order_by(:score, :desc)
 
     end
     @searchstring = searchstring
-
-    #@search = @search.results.select {|r| @allowed_issue_trackers.include? r.project_id}
-    @authorized_search = @search.results.select {|r| @allowed_issue_trackers.include?(r.project_id)|| @allowed_wikis.include?(r.project_id)}
-    #rescue
-    #  render :text => "Oh no, the Solr server is gone?!", :layout => true
-    #end
   end
 
   protected
@@ -98,13 +103,13 @@ class RedsunSearchController < ApplicationController
 
   end
 
-  def date_conditions(query, field)
+  def date_conditions(field)
     conditions = []
     conditions << {:name => :last_7_days, :date => (Time.now - 7.day)}
     conditions << {:name => :last_month, :date => (Time.now - 31.day)}
     conditions << {:name => :last_3_months, :date => (Time.now - 3.months)}
     conditions << {:name => :last_6_months, :date => (Time.now - 6.months)}
-    conditions << {:name => :last_12_months, :date => (Time.now - 12.months)}
+    conditions << {:name => :older, :date => (Time.now - 12.months)}
     conditions
   end
 

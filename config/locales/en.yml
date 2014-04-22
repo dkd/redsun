@@ -1,6 +1,7 @@
 # English strings go here for Rails i18n
 en:
   redsun:
+    records: "Records"
     header: "Solr Search by RedSun"
     searchstring: "Search terms"
     order: Sort by
@@ -14,3 +15,10 @@ en:
       tracker_id: "Tracker"
       priority_id: "Prioritiy"
       assigned_to_id: "Assigned to"
+      date_range_rows:
+        last_7_days: "der letzten 7 Tage"
+        last_month: "der letzten 30 Tage"
+        last_3_months: "der letzten 3 Monate"
+        last_6_months: "der letzten 3 Monate"
+        last_6_months: "der letzen 6 Monate"
+        older: "Vor mehr als einem Jahr"

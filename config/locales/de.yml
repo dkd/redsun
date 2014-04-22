@@ -1,4 +1,20 @@
 de:
+  will_paginate:
+    next_label: Weiter →
+    page_entries_info:
+      multi_page: Zeige %{from} - %{to} Ergebnisse von insgesamt %{count} 
+      multi_page_html: Zeige <b>%{from}&nbsp;-&nbsp;%{to}</b> von <b>%{count}</b>
+        insgesamt
+      single_page:
+        one: Zeige 1 %{model}
+        other: Zeige alle %{count} %{model}
+        zero: Kein(e) %{model} gefunden
+      single_page_html:
+        one: Zeige <b>1</b> %{model}
+        other: Zeige <b>alle&nbsp;%{count}</b> %{model}
+        zero: Kein(e) %{model} gefunden
+    page_gap: '&hellip;'
+    previous_label: ← Vorige
   redsun:
     header: "Solr-Suche"
     searchstring: "Suchbegriffe"
@@ -7,14 +23,14 @@ de:
     reset: "Zurücksetzen"
     facet:
       remove: "- entfernen"
-      created_on: "Erstellt innerhalb"
+      created_on: "Erstellungszeitraum"
       updated_on: "Aktualisierungdatum"
       date_range_rows:
-        last_7_days: "der letzten 7 Tage"
-        last_month: "der letzten 30 Tage"
-        last_3_months: "der letzten 3 Monate"
-        last_6_months: "der letzten 3 Monate"
-        last_6_months: "Vor mehr als einem Jahr"
+        last_7_days: "innerhalb der letzten 7 Tage"
+        last_month: "innerhalb der letzten 30 Tage"
+        last_3_months: "innerhalb der letzten 3 Monate"
+        last_6_months: "innerhalb der letzten 6 Monate"
+        older: "Vor mehr als einem Jahr"
       author_id: "Autor"
       status_id: "Status"
       tracker_id: "Tracker"

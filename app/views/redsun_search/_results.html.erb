@@ -2,11 +2,7 @@
 <div style="text-align:center;">
   <%= will_paginate @search.results %>
 </div>
-Allowed Wikis: <%= @allowed_wikis %><br>
-Allowed Projects for Issues: <%= @allowed_issue_trackers %>
-<%
-@search2 = @search.each_hit_with_result.collect {|hit, record| [hit, record] if (@allowed_issue_trackers.include?(record.project_id) || @allowed_wikis.include?(record.project_id))}
-%>
+
 <% @search.each_hit_with_result do |hit, record| %>
   <%= render "#{hit.class_name.underscore}_result", hit: hit, record: record %>
 <% end %>
