@@ -1,16 +1,22 @@
 <h2><%= t "redsun.header"%></h2>
-<%= form_for("search_form", :url => { :controller => :redsun_search, 
-                                      :action => :index,
-                                      :page => nil,
-                                      :project_id => @project.id}, 
+<%= form_for("search_form", :url => @redsun_path,
                                       :html => { :style => "border: 1px solid #e9e9e9; padding: 1em; background: #f4f4f4; display: block", :method => :get }) do |f| %>
   <%= f.label t("redsun.searchstring")%>
   <%= f.text_field(:searchstring, :value => @searchstring, :title => "Search ...", :class => "toggle") %>
+  <%= f.select :scope, @scope_selector, {:selected => @scope}, { class: "select2"}  %>
   <%= f.label t("redsun.order") %>
-  <%= f.select :sort_field, Issue::SORT_FIELDS.collect { |o| [t("field_#{o}"), o]}, :selected => @sort_field %>
-  <%= f.select :sort_order, Issue::SORT_ORDER.collect {|o| [I18n.translate(o[1]), o.first]}, :selected => @sort_order %>
-  <%= f.submit "Search" %>
+  <%= f.select :sort_field, Issue::SORT_FIELDS.collect { |o| [t("field_#{o}"), o]}, {:selected => @sort_field }, { class: "select2"} %>
+  <%= f.select :sort_order, Issue::SORT_ORDER.collect {|o| [I18n.translate(o[1]), o.first]}, {:selected => @sort_order}, { class: "select2"}  %>
+  <%= f.submit t("redsun.search_button") %>
   <%= link_to t("redsun.reset"), url_for(:controller => "redsun_search", :action => :index, :project_id => params[:project_id])%>
+  <%= f.hidden_field(:author_id, value: params[:search_form][:author_id]) if params[:search_form][:author_id].present? %>
+  <%= f.hidden_field(:status_id, value: params[:search_form][:status_id]) if params[:search_form][:status_id].present? %>
+  <%= f.hidden_field(:tracker_id, value: params[:search_form][:tracker_id]) if params[:search_form][:tracker_id].present? %>
+  <%= f.hidden_field(:priority_id, value: params[:search_form][:priority_id]) if params[:search_form][:priority_id].present? %>
+  <%= f.hidden_field(:created_on, value: params[:search_form][:created_on]) if params[:search_form][:created_on].present? %>
+  <%= f.hidden_field(:updated_on, value: params[:search_form][:updated_on]) if params[:search_form][:updated_on].present? %>
+  <%= f.hidden_field(:class_name, value: params[:search_form][:class_name]) if params[:search_form][:class_name].present? %>
+  <%= f.hidden_field(:active, value: params[:search_form][:active]) if params[:search_form][:active].present? %>
 <% end -%>
 
 <% if @search.results.present? %>

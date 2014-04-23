@@ -22,6 +22,7 @@ Rails.configuration.to_prepare do
   unless SearchController.included_modules.include? RedmineRedsun::SearchControllerPatch
     SearchController.send(:include, RedmineRedsun::SearchControllerPatch) 
   end
+  Project.send(:include, RedmineRedsun::ProjectPatch) unless Project.included_modules.include? RedmineRedsun::ProjectPatch
   Issue.send(:include, RedmineRedsun::IssuePatch) unless Issue.included_modules.include? RedmineRedsun::IssuePatch
   WikiPage.send(:include, RedmineRedsun::WikiPagePatch) unless WikiPage.included_modules.include? RedmineRedsun::WikiPagePatch
 end

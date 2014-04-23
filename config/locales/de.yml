@@ -1,26 +1,31 @@
 de:
   will_paginate:
-    next_label: Weiter →
+    next_label: "Weiter →"
     page_entries_info:
-      multi_page: Zeige %{from} - %{to} Ergebnisse von insgesamt %{count} 
-      multi_page_html: Zeige <b>%{from}&nbsp;-&nbsp;%{to}</b> von <b>%{count}</b>
-        insgesamt
+      multi_page: "Zeige %{from} - %{to} Ergebnisse von insgesamt %{count}"
+      multi_page_html: "Zeige <b>%{from}&nbsp;-&nbsp;%{to}</b> von <b>%{count}</b> insgesamt"
+        
       single_page:
-        one: Zeige 1 %{model}
-        other: Zeige alle %{count} %{model}
-        zero: Kein(e) %{model} gefunden
+        one: "Zeige 1 Ergebnis"
+        other: "Zeige alle %{count} Ergebnisse"
+        zero: "Kein(e) Ergebnis gefunden"
       single_page_html:
-        one: Zeige <b>1</b> %{model}
-        other: Zeige <b>alle&nbsp;%{count}</b> %{model}
-        zero: Kein(e) %{model} gefunden
+        one: "Zeige <b>1</b> Ergebnis"
+        other: "Zeige <b>alle&nbsp;%{count}</b> Ergebnisse"
+        zero: "Kein(e) Ergebnis gefunden"
     page_gap: '&hellip;'
-    previous_label: ← Vorige
+    previous_label: "← Vorige"
   redsun:
+    search_button: "Suchen!"
     header: "Solr-Suche"
     searchstring: "Suchbegriffe"
     order: Sortierung
     no_results: "Es konnten leider keine Suchergebnisse gefunden werden."
     reset: "Zurücksetzen"
+    facets:
+      values:
+        "false": "Nein"
+        "true": "Ja"
     facet:
       remove: "- entfernen"
       created_on: "Erstellungszeitraum"
@@ -36,3 +41,5 @@ de:
       tracker_id: "Tracker"
       priority_id: "Priorität"
       assigned_to_id: "Zugewiesen an"
+      active: "Aktiv?"
+      class_name: "Objekt-Typ"

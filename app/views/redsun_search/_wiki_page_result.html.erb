@@ -4,6 +4,5 @@
 <br />
 <%= l(:label_updated_time, time_tag(record.updated_on)).html_safe %> | <%= record.content.author.login %></small></h3>
 <p>
-  <%= hit.highlights(:wiki_content).collect { |segment| segment.format { |word| "<span class='highlight'>#{word}</span>" }}.join(" ").html_safe %>
+  <%= hit.highlights(:wiki_content).collect { |segment| segment.format { |word| "<span class='highlight'>#{h word}</span>" }}.join(" ") %>
 </p>
-<hr>

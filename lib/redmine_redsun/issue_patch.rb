@@ -21,6 +21,12 @@ module RedmineRedsun
           integer :id
           # Tracker
           integer :tracker_id, :references => Tracker
+          
+          # Active?
+          boolean :active, stored: true do
+            active?
+          end
+          
           # Subject
           text :subject, :stored => true, :boost => 9 do
             subject.scan(/[[:print:]]/).join if subject.present?
@@ -69,6 +75,11 @@ module RedmineRedsun
       
       def class_name
         self.class.name
+      end
+      
+      def active?
+        return false if project.nil?
+        project.active?
       end
       
     end

@@ -7,6 +7,10 @@ en:
     order: Sort by
     no_results: "Sorry, no results found."
     reset: "Reset"
+    facets:
+      values:
+        "false": "No"
+        "true": "Yes"
     facet:
       remove: "- remove"
       created_on: "Created On"
@@ -22,3 +26,5 @@ en:
         last_6_months: "der letzten 3 Monate"
         last_6_months: "der letzen 6 Monate"
         older: "Vor mehr als einem Jahr"
+      active: "Active?"
+      class_name: "Object Type"

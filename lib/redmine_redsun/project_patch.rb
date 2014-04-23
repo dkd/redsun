@@ -1,9 +1,9 @@
 # encoding: UTF-8
-require_dependency 'wiki_page'
+require_dependency 'project'
 
 # Patches Redmine's User dynamically.
 module RedmineRedsun
-  module WikiPagePatch
+  module ProjectPatch
     def self.included(base) # :nodoc:
 
       base.extend ClassMethods
@@ -17,33 +17,21 @@ module RedmineRedsun
           
           # Class Name
           string :class_name, stored: true
-
-          # Project ID
-          integer :project_id
+          
+          # Name
+          text :name, stored: true
+          
+          # Description
+          text :description, stored: true
+          
+          # Issue ID
+          integer :id
           
           # Active?
-          boolean :active, stored: true do
+          boolean :active, stored: true do 
             active?
           end
           
-          # Page Title
-          text :title, :stored => true, :boost => 9 do
-            title.scan(/[[:print:]]/).join
-          end
-
-          # Content of Page
-          text :wiki_content, :stored => true, :boost => 7  do
-            content.text.scan(/[[:print:]]/).join
-          end
-
-          # Updated at
-          time :updated_on, :trie => true
-
-          #  Creator
-          integer :author_id, :references => User do
-            content.author_id
-          end
-
         end
      end
 
@@ -60,15 +48,7 @@ module RedmineRedsun
       def class_name
         self.class.name
       end
-      
-      def project_id
-        wiki.project_id
-      end
-      
-      def active?
-        wiki.project.active?
-      end
-      
+
     end
 
   end

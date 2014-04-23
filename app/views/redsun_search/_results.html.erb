@@ -1,21 +1,34 @@
 <br><%= page_entries_info @search.results, {model: "record"} %>
-<div style="text-align:center;">
+<div style="text-align:center;margin-bottom: 2em">
   <%= will_paginate @search.results %>
 </div>
 
 <% @search.each_hit_with_result do |hit, record| %>
-  <%= render "#{hit.class_name.underscore}_result", hit: hit, record: record %>
+  <div style="display: block; border-top: 1px solid #e9e9e9; clear: left; background: <%= !record.active? ? "red" : "" %>">
+    <div style="float:left; width: 70%">
+      <%= render "#{hit.class_name.underscore}_result", hit: hit, record: record %>
+    </div>
+    <div style="float:right;padding-top: 2em">
+      <% if !record.active? %>
+        <span style="background: red; color:white; padding: 1em;border-radius: 10px">
+          <%= t "redsun.inactive" %>
+        </span>
+      <% end %>
+    </div>
+  </div>
+
 <% end %>
 
-<div style="text-align:center">
+<div style="text-align:center; clear: both">
  <%= will_paginate @search.results %>
 </div>
-<% content_for :sidebar do %>
+<% content_for :sidebar do %>  
+  <%= facet(:class_name, @search, :class_name) %>
+  <%= facet(:active, @search, :active) %>
   <%= facet(:author_id, @search, :login) %>
   <%= facet(:status_id, @search, :name) %>
   <%= facet(:tracker_id, @search, :name) %>
   <%= facet(:priority_id, @search, :name) %>
   <%= facet(:created_on, @search, :created_on, "date_facet") %>
   <%= facet(:updated_on, @search, :updated_on, "date_facet") %>
-  <%= facet(:class_name, @search, :class_name) %>
 <% end %>

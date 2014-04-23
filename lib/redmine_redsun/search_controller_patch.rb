@@ -23,11 +23,17 @@ module RedmineRedsun
     module InstanceMethods
 
       def pick_search_engine
-        if @project.present? && @project.module_enabled?(:redsun)
-          redirect_to redsun_search_url(@project, :search_form => {:searchstring => params[:q]})
+        
+        if @project.present?
+          search_scope = "project"
+          project_id = @project.id
+          redirect_to redsun_project_search_url(project_id: project_id, search_form: { searchstring: params[:q], scope: search_scope })
         else
-          true
+          search_scope = "all_projects"
+          project_id = nil
+          redirect_to redsun_search_url(search_form: { searchstring: params[:q], scope: search_scope, project_id: project_id })
         end
+        
       end
 
     end

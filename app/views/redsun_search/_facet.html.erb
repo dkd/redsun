@@ -6,7 +6,7 @@
           overflow: scroll;
       }
     </style>
-
+    
   <ul class="facets">
   <% results.facet(facet.to_sym).rows.each do |result| %>
     <li>
@@ -17,7 +17,7 @@
           %>
 
       <% else %>
-        <%= link_to "#{t('facets.values.'+result.value.to_s.tr(" ", "_"), :default => result.value)} (#{result.count})",
+        <%= link_to "#{t('redsun.facets.values.'+result.value.to_s.downcase.tr(" ", "_"), :default => result.value)} (#{result.count})",
         url_for(:controller => "redsun_search", :action => :index, :search_form => {facet.to_sym => result.value}.reverse_merge(params[:search_form]))
         %>
       <% end %>
