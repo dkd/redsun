@@ -70,7 +70,7 @@ module RedmineRedsun
       end
       
       def project_name
-        project.name of project
+        project.name if project
       end
       
       def author_id
