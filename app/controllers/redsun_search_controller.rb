@@ -122,9 +122,15 @@ class RedsunSearchController < ApplicationController
   protected
 
     def set_search_form
-      @project = Project.find(params[:project_id]) if params[:project_id].present?
+      
       params[:search_form] = {} unless params[:search_form].present?
       
+      if params[:project_id].present?
+        @project = Project.find(params[:project_id])
+      elsif params[:search_form][:project_id].present?
+        @project = Project.find(params[:search_form][:project_id])
+      end
+
       # Reset facets if search button is pressed
       if params[:commit].present?
         [:author_id,

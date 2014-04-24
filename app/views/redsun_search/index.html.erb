@@ -17,6 +17,7 @@
   <%= f.hidden_field(:updated_on, value: params[:search_form][:updated_on]) if params[:search_form][:updated_on].present? %>
   <%= f.hidden_field(:class_name, value: params[:search_form][:class_name]) if params[:search_form][:class_name].present? %>
   <%= f.hidden_field(:active, value: params[:search_form][:active]) if params[:search_form][:active].present? %>
+  <%= f.hidden_field(:project_id, value: @project.id) if @project %>
 <% end -%>
 
 <% if @search.results.present? %>
