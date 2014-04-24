@@ -26,6 +26,9 @@ module RedmineRedsun
           boolean :active, stored: true do
             active?
           end
+
+          # is_private
+          boolean :is_private, stored: true
           
           # Subject
           text :subject, :stored => true, :boost => 9 do

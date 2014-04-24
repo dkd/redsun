@@ -50,7 +50,7 @@ class RedsunSearchController < ApplicationController
         all_of do
           with :class, Issue
           with(:project_id).any_of allowed_issues.flatten
-          #with(:is_private, false)
+          with(:is_private, false)
         end
         all_of do
           with :class, WikiPage
