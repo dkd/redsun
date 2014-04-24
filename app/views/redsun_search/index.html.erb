@@ -8,6 +8,7 @@
   <%= f.select :sort_field, Issue::SORT_FIELDS.collect { |o| [t("field_#{o}"), o]}, {:selected => @sort_field }, { class: "select2"} %>
   <%= f.select :sort_order, Issue::SORT_ORDER.collect {|o| [I18n.translate(o[1]), o.first]}, {:selected => @sort_order}, { class: "select2"}  %>
   <%= f.submit t("redsun.search_button") %>
+  
   <%= link_to t("redsun.reset"), url_for(:controller => "redsun_search", :action => :index, :project_id => params[:project_id])%>
   <%= f.hidden_field(:author_id, value: params[:search_form][:author_id]) if params[:search_form][:author_id].present? %>
   <%= f.hidden_field(:status_id, value: params[:search_form][:status_id]) if params[:search_form][:status_id].present? %>
@@ -17,6 +18,7 @@
   <%= f.hidden_field(:updated_on, value: params[:search_form][:updated_on]) if params[:search_form][:updated_on].present? %>
   <%= f.hidden_field(:class_name, value: params[:search_form][:class_name]) if params[:search_form][:class_name].present? %>
   <%= f.hidden_field(:active, value: params[:search_form][:active]) if params[:search_form][:active].present? %>
+  <%= f.hidden_field(:project_name, value: params[:search_form][:project_name]) if params[:search_form][:project_name].present? %>
   <%= f.hidden_field(:project_id, value: @project.id) if @project %>
 <% end -%>
 
@@ -25,3 +27,13 @@
 <% else %>
      <p><%= t "redsun.no_results" %></p>
 <% end %>
+
+<script type="text/javascript" charset="utf-8">
+  $(document).ready(function(){
+
+    $('#search_form_searchstring').focus();
+    if ($.fn.select2 != undefined) {
+      $(".select2").select2();
+    }
+  })
+</script>

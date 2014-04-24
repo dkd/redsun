@@ -1,0 +1,8 @@
+<h5><%= t "redsun.project" %></small></h5>
+<h3><%= link_to highlighter_for(:name, hit, record), record %></h3>
+<h5>
+  <%= authoring(record.created_on, nil )%>
+</h5>
+<p>
+  <%= strip_tags(hit.highlights(:description)).collect { |segment| segment.format { |word| "<span class='highlight'>#{word}</span>" }}.join(" ").html_safe %>
+</p>

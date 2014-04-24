@@ -32,6 +32,9 @@ module RedmineRedsun
             active?
           end
           
+          # Name of Project
+          string :project_name, stored: true
+          
         end
      end
 
@@ -47,6 +50,10 @@ module RedmineRedsun
       
       def class_name
         self.class.name
+      end
+      
+      def project_name
+        project.name if project
       end
 
     end

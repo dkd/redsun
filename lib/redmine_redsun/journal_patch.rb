@@ -1,9 +1,9 @@
 # encoding: UTF-8
-require_dependency 'wiki_page'
+require_dependency 'journal'
 
 # Patches Redmine's User dynamically.
 module RedmineRedsun
-  module WikiPagePatch
+  module JournalPatch
     def self.included(base) # :nodoc:
 
       base.extend ClassMethods
@@ -17,32 +17,28 @@ module RedmineRedsun
           
           # Class Name
           string :class_name, stored: true
-
-          # Project ID
-          integer :project_id
+          
+          # Journal Type
+          string :journalized_type
           
           # Active?
           boolean :active, stored: true do
             active?
           end
           
-          # Page Title
-          text :title, :stored => true, :boost => 9 do
-            title.scan(/[[:print:]]/).join
+          # Notes
+          text :notes, :stored => true, :boost => 9 do
+            notes.scan(/[[:print:]]/).join if notes.present?
           end
 
-          # Content of Page
-          text :wiki_content, :stored => true, :boost => 7  do
-            content.text.scan(/[[:print:]]/).join
-          end
+          # Project ID
+          integer :project_id
 
-          # Updated at
-          time :updated_on, :trie => true
-
-          #  Creator
-          integer :author_id, :references => User do
-            content.author_id
-          end
+          # Created at
+          time :created_on, :trie => true
+          
+          # Issue creator
+          integer :author_id, :references => User
           
           # Name of Project
           string :project_name, stored: true
@@ -64,16 +60,21 @@ module RedmineRedsun
         self.class.name
       end
       
+      def active?
+        return false if project.nil?
+        project.active?
+      end
+      
       def project_id
-        wiki.project_id
+        project.id if project
       end
       
       def project_name
-        project.name if project
+        project.name of project
       end
       
-      def active?
-        wiki.project.active?
+      def author_id
+        user.id
       end
       
     end

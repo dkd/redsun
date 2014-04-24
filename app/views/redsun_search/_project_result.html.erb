@@ -1,9 +1,0 @@
-<h5><%= t "field_project" %></small></h5>
-<h3><%= link_to highlighter_for(:name, hit, record), record %>
-  <small>
-  <br />
-  <% if record.updated_on %>
-  <%= l(:label_updated_time, time_tag(record.updated_on)).html_safe %><%- end -%></small></h3>
-<p>
-  <%= strip_tags(hit.highlights(:description)).collect { |segment| segment.format { |word| "<span class='highlight'>#{word}</span>" }}.join(" ").html_safe %>
-</p>

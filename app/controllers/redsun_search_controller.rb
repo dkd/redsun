@@ -37,18 +37,20 @@ class RedsunSearchController < ApplicationController
     sort_order = @sort_order
     sort_field = @sort_field
     
-    @search = Sunspot.search([Project, Issue, WikiPage]) do
+    @search = Sunspot.search([Project, Issue, WikiPage, Journal]) do
       fulltext searchstring do
         highlight :description
         highlight :subject
         highlight :wiki_content
         highlight :name
+        highlight :notes
       end
 
       any_of do
         all_of do
           with :class, Issue
           with(:project_id).any_of allowed_issues.flatten
+          #with(:is_private, false)
         end
         all_of do
           with :class, WikiPage
@@ -60,9 +62,15 @@ class RedsunSearchController < ApplicationController
           with(:id).any_of allowed_projects.flatten
         end
         
+        all_of do
+          with :class, Journal
+          with(:project_id).any_of allowed_issues.flatten
+          with(:journalized_type, "Issue")
+        end
+        
       end
 
-      %w(author_id assigned_to_id status_id tracker_id).each do |easy_facet|
+      %w(author_id project_name assigned_to_id status_id tracker_id).each do |easy_facet|
         facet easy_facet, :minimum_count => 2
         if params.has_key?(:search_form) && params[:search_form][easy_facet].present?
           with(easy_facet, params[:search_form][easy_facet])
@@ -84,12 +92,10 @@ class RedsunSearchController < ApplicationController
           with(date_facet).greater_than(date_range) unless date_range.nil?
         end
       end
-      
-      facet "active", :minimum_count => 2
+
       if params.has_key?(:search_form) && params[:search_form][:active].present?
          with(:active, (params[:search_form][:active] == "true" ? true : false ))
       end
-     
 
       # Pagination
       paginate(:page =>  params[:page], :per_page => 15)
@@ -149,9 +155,9 @@ class RedsunSearchController < ApplicationController
       end
     
       @scope = params[:search_form][:scope] || "all_projects"
-      @scope_selector =  [["My Projects", "my_projects"], ["All Projects", "all_projects"]]
+      @scope_selector =  [[l(:label_my_projects), "my_projects"], [l(:label_project_all), "all_projects"]]
       @redsun_path = @project.present? ? redsun_project_search_path(project_id: @project.id) : redsun_search_path
-      @scope_selector.push([@project.name, "project"]) if @project
+      @scope_selector.push([l(:label_and_its_subprojects, @project.name), "project"]) if @project
       
     end
 

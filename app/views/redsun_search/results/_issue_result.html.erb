@@ -1,0 +1,15 @@
+<h5><%= t "field_issue" %> #<%= record.id %> in <%= link_to record.try(:project).try(:name), record.try(:project) %></small></h5>
+<h3><%= link_to highlighter_for(:subject, hit, record), record %></h3>
+<% if record.created_on && record.author %>
+<h5>
+  <%= avatar(record.author, :size => "16") %><%= authoring(record.created_on, record.author )%>
+</h5>
+<% end %>
+<p>
+  <% if hit.highlights(:description).empty? %>
+    <%= strip_tags(record.description)%>
+  <% else %>
+    <%= strip_tags(hit.highlights(:description)).collect { |segment| segment.format { |word| "<span class='highlight'>#{word}</span>" }}.join(" ").html_safe %>
+  <% end %>
+</p>
+

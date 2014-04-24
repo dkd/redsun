@@ -9,7 +9,6 @@
 
   <ul class="facets">
   <% results.facet(facet.to_sym).rows.each do |result| %>
-    
       <% if params[:search_form][facet].blank? || params[:search_form].present? && params[:search_form][facet].present? && params[:search_form][facet] == result.value  %>
       <li>
           <% label = t("redsun.facet.date_range_rows.#{result.value}") %>
