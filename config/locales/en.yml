@@ -1,12 +1,19 @@
 # English strings go here for Rails i18n
 en:
   redsun:
+    settings:
+      enable_solr_search: "Enable Solr search"
+    inactive: "Inactive"
     records: "Records"
     header: "Solr Search by RedSun"
     searchstring: "Search terms"
     order: Sort by
     no_results: "Sorry, no results found."
     reset: "Reset"
+    journal: "Comment"
+    issue: "Issue"
+    wiki_page: "Wiki Page"
+    project: "Project"
     facets:
       values:
         "false": "No"

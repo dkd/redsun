@@ -1,12 +1,6 @@
-<% if results.facet(facet).present? && results.facet(facet).rows && results.facet(facet).rows.count > 0 || params[:search_form][facet].present? %>
+<% if results.facet(facet).present? && results.facet(facet).rows && results.facet(facet).rows.count > 1 || params[:search_form][facet].present? %>
   <h3><%=t "redsun.facet.#{facet.to_sym}"%></h3>
-    <style>
-      ul.facets {
-          max-height: 200px;
-          overflow: scroll;
-      }
-    </style>
-    
+
   <ul class="facets">
   <% results.facet(facet.to_sym).rows.each do |result| %>
     <li>

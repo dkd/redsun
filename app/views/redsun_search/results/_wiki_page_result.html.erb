@@ -1,0 +1,10 @@
+<h5><%= t "label_wiki_page" %> in <%= link_to record.try(:project).try(:name), record.try(:project) %></h5>
+<h3><%= link_to highlighter_for(:title, hit, record).gsub(/_/, " "), record %></h3>
+<% if record.content.updated_on && record.content.author %>
+<h5>
+  <%= avatar(record.content.author, :size => "16") %><%= authoring(record.content.updated_on, record.content.author, label: :label_updated_time_by)%>
+</h5>
+<% end %>
+<p>
+  <%= strip_tags(hit.highlights(:wiki_content)).collect { |segment| segment.format { |word| "<span class='highlight'>#{word}</span>" }}.join(" ").html_safe %>
+</p>

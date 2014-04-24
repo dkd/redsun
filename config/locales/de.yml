@@ -16,6 +16,13 @@ de:
     page_gap: '&hellip;'
     previous_label: "← Vorige"
   redsun:
+    inactive: "Deaktiviert"
+    settings:
+      enable_solr_search: "Solr Suche aktivieren"
+    journal: "Kommentar"
+    issue: "Ticket"
+    wiki_page: "Wiki Seite"
+    project: "Projekt"
     search_button: "Suchen!"
     header: "Solr-Suche"
     searchstring: "Suchbegriffe"
