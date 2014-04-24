@@ -42,6 +42,9 @@ module RedmineRedsun
           
           # Name of Project
           string :project_name, stored: true
+          
+          # Is Private
+          boolean :is_private, stored: true
 
         end
      end
@@ -53,9 +56,7 @@ module RedmineRedsun
     end
 
     module InstanceMethods
-      SORT_FIELDS = ["updated_on", "created_on", "score"]
-      SORT_ORDER = [["ASC", "label_ascending"],["DESC", "label_descending"]]
-      
+
       def class_name
         self.class.name
       end
@@ -75,6 +76,14 @@ module RedmineRedsun
       
       def author_id
         user.id
+      end
+      
+      def is_private
+        if journalized.is_a? Issue
+          journalized.is_private
+        else
+          false
+        end
       end
       
     end
