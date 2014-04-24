@@ -13,17 +13,17 @@
       <% if (attribute.present? && result.instance.present?) %>
           <% label = result.instance.send(attribute.to_sym) %>
           <%= link_to((label.present? ? label : "unknown" ) + " (#{result.count})",
-          url_for(:controller => "redsun_search", :action => :index, :search_form => {facet.to_sym => result.value}.reverse_merge(params[:search_form])))
+          url_for(:search_form => {facet.to_sym => result.value}.reverse_merge(params[:search_form])))
           %>
 
       <% else %>
         <%= link_to "#{t('redsun.facets.values.'+result.value.to_s.downcase.tr(" ", "_"), :default => result.value)} (#{result.count})",
-        url_for(:controller => "redsun_search", :action => :index, :search_form => {facet.to_sym => result.value}.reverse_merge(params[:search_form]))
+        url_for(:search_form => {facet.to_sym => result.value}.reverse_merge(params[:search_form]))
         %>
       <% end %>
 
       <%= link_to t("redsun.facet.remove"),
-      url_for(:controller => "redsun_search", :action => :index, :search_form => { facet.to_sym => "" }.reverse_merge(params[:search_form])),
+      url_for(:search_form => { facet.to_sym => "" }.reverse_merge(params[:search_form])),
       :class => "remove" if params[:search_form][facet].present? %>
     </li>
     <% end -%>
