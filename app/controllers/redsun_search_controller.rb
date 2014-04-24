@@ -6,12 +6,7 @@ class RedsunSearchController < ApplicationController
   
   def index
 
-    #begin
-    if params[:search_form].present? && params[:search_form][:searchstring].present?
-      searchstring = params[:search_form][:searchstring]
-    else
-      searchstring = ""
-    end
+    searchstring = params[:search_form][:searchstring].present? ? params[:search_form][:searchstring] : ""
 
     allowed_projects = []
     allowed_issues = []
@@ -38,8 +33,7 @@ class RedsunSearchController < ApplicationController
     allowed_projects = allowed_projects.push(0)
     allowed_issues = allowed_issues.push(0)
     allowed_wikis = allowed_wikis.push(0)
-    Rails.logger.info "Allowed Projects for Issues: #{allowed_issues.inspect}"
-    Rails.logger.info "Allowed Projects: #{allowed_projects.inspect}"
+
     sort_order = @sort_order
     sort_field = @sort_field
     
@@ -106,9 +100,6 @@ class RedsunSearchController < ApplicationController
           row(condition[:name].to_s) do
             with(:created_on).greater_than condition[:date]
           end
-          #row(condition[:name].to_s) do
-          #  with(:updated_on).greater_than condition[:date]
-          #end
         end
       end
 
@@ -161,6 +152,7 @@ class RedsunSearchController < ApplicationController
       @scope_selector =  [["My Projects", "my_projects"], ["All Projects", "all_projects"]]
       @redsun_path = @project.present? ? redsun_project_search_path(project_id: @project.id) : redsun_search_path
       @scope_selector.push([@project.name, "project"]) if @project
+      
     end
 
     def date_conditions(field)
