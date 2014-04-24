@@ -59,13 +59,14 @@ class RedsunSearchController < ApplicationController
         
         all_of do
           with :class, Project
-          with(:id).any_of allowed_projects.flatten
+          with(:project_id).any_of allowed_projects.flatten
         end
         
         all_of do
           with :class, Journal
           with(:project_id).any_of allowed_issues.flatten
           with(:journalized_type, "Issue")
+          with(:is_private, false)
         end
         
       end

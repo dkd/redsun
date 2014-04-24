@@ -21,7 +21,7 @@ de:
       enable_solr_search: "Solr Suche aktivieren"
     journal: "Kommentar"
     issue: "Ticket"
-    wiki_page: "Wiki Seite"
+    wiki_page: "Wikiseite"
     project: "Projekt"
     search_button: "Suchen!"
     header: "Solr-Suche"
@@ -33,6 +33,10 @@ de:
       values:
         "false": "Nein"
         "true": "Ja"
+        comment: "Kommentare"
+        issue: "Ticket"
+        wikipage: "Wikiseite"
+        project: "Projekt"
     facet:
       remove: "- entfernen"
       created_on: "Erstellungszeitraum"
@@ -50,3 +54,4 @@ de:
       assigned_to_id: "Zugewiesen an"
       active: "Aktiv?"
       class_name: "Objekt-Typ"
+      project_name: "Projekt"
