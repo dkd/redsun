@@ -33,7 +33,7 @@ de:
       values:
         "false": "Nein"
         "true": "Ja"
-        comment: "Kommentare"
+        journal: "Kommentar"
         issue: "Ticket"
         wikipage: "Wikiseite"
         project: "Projekt"
@@ -55,3 +55,6 @@ de:
       active: "Aktiv?"
       class_name: "Objekt-Typ"
       project_name: "Projekt"
+    connection_refused_header: "Redsun: Solr Server ist nicht erreichbar"
+    connection_refused_admin_message: "Bitte deaktivieren Sie in den Redsun-Plugin Einstellungen die Solr-Suche solange das Problem nicht gelöst ist."
+    connection_refused_user_message: "Please contact your admin."
