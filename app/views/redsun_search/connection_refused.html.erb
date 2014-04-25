@@ -1,0 +1,9 @@
+<h1><%= l("redsun.connection_refused_header") %></h1>
+<% if User.current.admin? %>
+  <p><%= l("redsun.connection_refused_admin_message") %></p>
+  <hr>
+  <h3>Sunspot Path Info</h3>
+  <%= Sunspot.session.config.solr.url %>
+<% else %>
+  <p><%= l("redsun.connection_refused_user_message") %></p>  
+<% end %>

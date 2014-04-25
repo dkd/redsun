@@ -40,3 +40,6 @@ en:
       active: "Active?"
       class_name: "Object Type"
       project_name: "Project"
+    connection_refused_header: "Redsun: The connection to the Solr server has been refused."
+    connection_refused_admin_message: "Please deactivate the Redsun plugin in the settings menu."
+    connection_refused_user_message: "Please contact your admin."

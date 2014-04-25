@@ -5,7 +5,7 @@ class RedsunSearchController < ApplicationController
   before_filter :set_search_form
   
   def index
-
+    begin
     searchstring = params[:search_form][:searchstring].present? ? params[:search_form][:searchstring] : ""
 
     allowed_projects = []
@@ -115,6 +115,9 @@ class RedsunSearchController < ApplicationController
 
     end
     @searchstring = searchstring
+  rescue Errno::ECONNREFUSED
+    render "connection_refused"
+  end
   end
 
   protected
