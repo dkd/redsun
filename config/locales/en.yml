@@ -17,6 +17,10 @@ en:
     search_button: "Search!"
     facets:
       values:
+        journal: "Comment"
+        issue: "Issue"
+        wikipage: "Wiki Page"
+        project: "Project"
         "false": "No"
         "true": "Yes"
     facet:
