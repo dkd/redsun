@@ -29,7 +29,7 @@ module RedmineRedsun
 
           # is_private
           boolean :is_private, stored: true
-          
+
           # Subject
           text :subject, :stored => true, :boost => 9 do
             subject.scan(/[[:print:]]/).join if subject.present?
@@ -66,7 +66,7 @@ module RedmineRedsun
           
           # Name of Project
           string :project_name, stored: true
-          
+
         end
      end
 
@@ -79,20 +79,20 @@ module RedmineRedsun
     module InstanceMethods
       SORT_FIELDS = ["updated_on", "created_on", "score"]
       SORT_ORDER = [["ASC", "label_ascending"],["DESC", "label_descending"]]
-      
+
       def class_name
         self.class.name
       end
-      
+
       def project_name
         project.name if project
       end
-      
+
       def active?
         return false if project.nil?
         project.active?
       end
-      
+
     end
 
   end

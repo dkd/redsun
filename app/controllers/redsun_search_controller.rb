@@ -14,8 +14,8 @@ class RedsunSearchController < ApplicationController
 
     if @project && @scope == "project"
       projects = @project.self_and_descendants.all
-      allowed_projects << projects.collect(&:id)
-      allowed_issues << projects.collect {|project| project.id if User.current.allowed_to?(:view_issues, project) }.compact
+      allowed_projects << projects.collect {|p| p.id if User.current.allowed_to?(:view_project, p) }.compact
+      allowed_issues << projects.collect {|project| project .id if User.current.allowed_to?(:view_issues, project) }.compact
       allowed_wikis << projects.collect {|project| project.id if User.current.allowed_to?(:view_wiki_pages, @project) }.compact
     elsif @scope == "my_projects"
       projects = User.current.memberships.collect(&:project).compact.uniq
@@ -25,7 +25,7 @@ class RedsunSearchController < ApplicationController
     # Search all projects
     else
        projects = Project.all
-       allowed_projects << projects.collect(&:id)
+       allowed_projects << projects.collect {|p| p.id if User.current.allowed_to?(:view_project, p) }.compact
        allowed_issues << projects.collect {|p| p.id if User.current.allowed_to?(:view_issues, p) }.compact
        allowed_wikis << projects.collect {|p| p.id if User.current.allowed_to?(:view_wiki_pages, p) }.compact
     end
@@ -72,7 +72,7 @@ class RedsunSearchController < ApplicationController
       end
 
       %w(author_id project_name assigned_to_id status_id tracker_id).each do |easy_facet|
-        facet easy_facet, :minimum_count => 2
+        facet easy_facet, :minimum_count => 1
         if params.has_key?(:search_form) && params[:search_form][easy_facet].present?
           with(easy_facet, params[:search_form][easy_facet])
         end
