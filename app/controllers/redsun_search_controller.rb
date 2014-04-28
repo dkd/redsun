@@ -115,9 +115,12 @@ class RedsunSearchController < ApplicationController
 
     end
     @searchstring = searchstring
-  rescue Errno::ECONNREFUSED
-    render "connection_refused"
-  end
+
+    rescue Errno::ECONNREFUSED
+      render "connection_refused"
+    rescue RSolr::Error::Http
+      rescue "connection_refused"
+    end
   end
 
   protected
