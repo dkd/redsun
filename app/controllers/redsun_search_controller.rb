@@ -13,6 +13,7 @@ class RedsunSearchController < ApplicationController
     allowed_wikis = []
 
     if @project && @scope == "project"
+      params[:search_form][:project_id] = @project.id
       projects = @project.self_and_descendants.all
       allowed_projects << projects.collect {|p| p.id if User.current.allowed_to?(:view_project, p) }.compact
       allowed_issues << projects.collect {|project| project .id if User.current.allowed_to?(:view_issues, project) }.compact
