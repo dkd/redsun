@@ -7,7 +7,10 @@ class RedsunSearchController < ApplicationController
   def index
     begin
     searchstring = params[:search_form][:searchstring].present? ? params[:search_form][:searchstring] : ""
-
+    if searchstring.match(/^#?(\d+)$/) && Issue.visible.find_by_id($1.to_i)
+      redirect_to :controller => "issues", :action => "show", :id => $1
+      return
+    end
     allowed_projects = []
     allowed_issues = []
     allowed_wikis = []
