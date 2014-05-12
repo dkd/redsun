@@ -27,4 +27,5 @@ Rails.configuration.to_prepare do
   Issue.send(:include, RedmineRedsun::IssuePatch) unless Issue.included_modules.include? RedmineRedsun::IssuePatch
   WikiPage.send(:include, RedmineRedsun::WikiPagePatch) unless WikiPage.included_modules.include? RedmineRedsun::WikiPagePatch
   Journal.send(:include, RedmineRedsun::JournalPatch) unless Journal.included_modules.include? RedmineRedsun::JournalPatch
+  ActiveSupport::TestCase.send(:include, RedmineRedsun::ActiveSupport::TestCasePatch) unless ActiveSupport::TestCase.included_modules.include? RedmineRedsun::ActiveSupport::TestCasePatch
 end
