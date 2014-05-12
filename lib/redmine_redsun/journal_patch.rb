@@ -15,6 +15,9 @@ module RedmineRedsun
 
         searchable do
           
+          # ID
+          text :id, stored: true
+          
           # Class Name
           string :class_name, stored: true
           

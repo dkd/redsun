@@ -24,8 +24,8 @@ module RedmineRedsun
           # Description
           text :description, stored: true
 
-          # Issue ID
-          integer :id
+          # ID
+          text :id, stored: true
 
           # Project id
           integer :project_id, using: :id

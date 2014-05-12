@@ -14,18 +14,21 @@ module RedmineRedsun
         unloadable # Send unloadable so it will not be unloaded in development
 
         searchable do
-          
+
+          # ID
+          text :id, stored: true
+
           # Class Name
           string :class_name, stored: true
 
           # Project ID
           integer :project_id
-          
+
           # Active?
           boolean :active, stored: true do
             active?
           end
-          
+
           # Page Title
           text :title, :stored => true, :boost => 9 do
             title.scan(/[[:print:]]/).join

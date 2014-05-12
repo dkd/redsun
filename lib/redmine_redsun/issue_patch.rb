@@ -17,8 +17,10 @@ module RedmineRedsun
           
           # Class Name
           string :class_name, stored: true
+          
           # Issue ID
-          integer :id
+          text :id, stored: true
+          
           # Tracker
           integer :tracker_id, :references => Tracker
           
@@ -92,7 +94,6 @@ module RedmineRedsun
         return false if project.nil?
         project.active?
       end
-
     end
 
   end

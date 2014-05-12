@@ -7,10 +7,13 @@ class RedsunSearchController < ApplicationController
   def index
     begin
     searchstring = params[:search_form][:searchstring].present? ? params[:search_form][:searchstring] : ""
+    
+    # Redirect to Issue if ticket ID is entered
     if searchstring.match(/^#?(\d+)$/) && Issue.visible.find_by_id($1.to_i)
       redirect_to :controller => "issues", :action => "show", :id => $1
       return
     end
+
     allowed_projects = []
     allowed_issues = []
     allowed_wikis = []
@@ -89,11 +92,9 @@ class RedsunSearchController < ApplicationController
         end
       end
       
-      conditions = date_conditions(:created_on)
-      
       %w(created_on updated_on).each do |date_facet|
         if params[:search_form].present? && params[:search_form][date_facet].present?
-          date_range = conditions.collect { |c| c[:date] if (c[:name].to_s == params[:search_form][date_facet.to_sym]) }.compact.first
+          date_range = date_conditions.collect { |c| c[:date] if (c[:name].to_s == params[:search_form][date_facet.to_sym]) }.compact.first
           with(date_facet).greater_than(date_range) unless date_range.nil?
         end
       end
@@ -107,9 +108,18 @@ class RedsunSearchController < ApplicationController
       
       # Created on facet
       facet :created_on do
-        conditions.each do |condition|
+        date_conditions.each do |condition|
           row(condition[:name].to_s) do
             with(:created_on).greater_than condition[:date]
+          end
+        end
+      end
+      
+      # Updated on facet
+      facet :updated_on do
+        date_conditions.each do |condition|
+          row(condition[:name].to_s) do
+            with(:updated_on).greater_than condition[:date]
           end
         end
       end
@@ -169,16 +179,16 @@ class RedsunSearchController < ApplicationController
       @scope_selector =  [[l(:label_my_projects), "my_projects"], [l(:label_project_all), "all_projects"]]
       @redsun_path = @project.present? ? redsun_project_search_path(project_id: @project.id) : redsun_search_path
       @scope_selector.push([l(:label_and_its_subprojects, @project.name), "project"]) if @project
-      
+
     end
 
-    def date_conditions(field)
+    def date_conditions
       conditions = []
-      conditions << {:name => :last_7_days, :date => (Time.now - 7.day)}
-      conditions << {:name => :last_month, :date => (Time.now - 31.day)}
-      conditions << {:name => :last_3_months, :date => (Time.now - 3.months)}
-      conditions << {:name => :last_6_months, :date => (Time.now - 6.months)}
-      conditions << {:name => :older, :date => (Time.now - 12.months)}
+      conditions << { name: :last_7_days,   date: (Time.now - 7.day)     }
+      conditions << { name: :last_month,    date: (Time.now - 31.day)    }
+      conditions << { name: :last_3_months, date: (Time.now - 3.months)  }
+      conditions << { name: :last_6_months, date: (Time.now - 6.months)  }
+      conditions << { name: :older,         date: (Time.now - 12.months) }
       conditions
     end
   
