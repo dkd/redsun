@@ -1,5 +1,5 @@
 <% title = record.journalized_type == "Issue" ? " #{record.journalized.subject}" : " " %>
-<h5><%= t "redsun.journal" %> #<%= record.id %> | <%= link_to ("#{t("field_#{record.journalized_type.downcase}")} ##{record.journalized.id}#{title}"), "#{url_for(record.journalized)}#history" %> in <%= link_to record.try(:project).try(:name), record.try(:project) %></small></h5>
+<h5><%= t "redsun.journal" %> #<%= highlighter_for(:id, hit, record) %> | <%= link_to ("#{t("field_#{record.journalized_type.downcase}")} ##{record.journalized.id}#{title}"), "#{url_for(record.journalized)}#history" %> in <%= link_to record.try(:project).try(:name), record.try(:project) %></small></h5>
 <% if record.created_on %>
   <h5>
     <%= avatar(record.user, :size => "16") %><%= authoring(record.created_on, record.user )%>
@@ -7,8 +7,8 @@
 <% end %>
 <p>
   <% if hit.highlights(:notes).empty? %>
-    <%= truncate strip_tags(record.notes), length: 500 %>
+    <%= truncate strip_tags(record.notes), length: 100 %>
   <% else %>
-    <%= strip_tags(hit.highlights(:notes)).collect { |segment| segment.format { |word| "<span class='highlight'>#{word}</span>" }}.join(" ").html_safe %>
+    <%= highlighter_for(:notes, hit, record) %>
   <% end %>
 </p>

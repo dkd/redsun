@@ -6,5 +6,9 @@
 </h5>
 <% end %>
 <p>
-  <%= strip_tags(hit.highlights(:wiki_content)).collect { |segment| segment.format { |word| "<span class='highlight'>#{word}</span>" }}.join(" ").html_safe %>
+  <% if hit.highlights(:wiki_content).present? %>
+    <%= strip_tags(hit.highlights(:wiki_content)).collect { |segment| segment.format { |word| "<span class='highlight'>#{word}</span>" }}.join(" ").html_safe %>
+  <% else %>
+    <%= truncate record.content.text, length: 500 %>
+  <% end %>
 </p>

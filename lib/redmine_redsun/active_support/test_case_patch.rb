@@ -6,7 +6,7 @@ module RedmineRedsun
         #base.send(:include, InstanceMethods)
       end
       module ClassMethods
-        ::Sunspot.session = ::Sunspot::Rails::StubSessionProxy.new(::Sunspot.session)
+        ::Sunspot.session = ::Sunspot::Rails::StubSessionProxy.new(::Sunspot.session) if Rails.env.test?
       end
     end
   end

@@ -14,16 +14,16 @@ module RedmineRedsun
         unloadable # Send unloadable so it will not be unloaded in development
 
         searchable do
-          
+
           # Class Name
           string :class_name, stored: true
-          
+
           # Issue ID
           text :id, stored: true
-          
+
           # Tracker
           integer :tracker_id, :references => Tracker
-          
+
           # Active?
           boolean :active, stored: true do
             active?
@@ -36,36 +36,47 @@ module RedmineRedsun
           text :subject, :stored => true, :boost => 9 do
             subject.scan(/[[:print:]]/).join if subject.present?
           end
+
           # Description
           text :description, :stored => true, :boost => 7 do
             description.scan(/[[:print:]]/).join if description.present?
           end
+
           # Project ID
           integer :project_id
+
           # Journals entries, i.e. status updates, comments, etc.
           text :journals do
             journals.map { |j| j.notes.scan(/[[:print:]]/).join if j.notes.present? }
           end
+
           # Updated at
           time :updated_on, :trie => true
+
           # Created at
           time :created_on, :trie => true
+
           # Issue creator
           integer :author_id, :references => User
+
           # Status
           integer :status_id, :references => IssueStatus
 
           # Start
           time :start_date, :trie => true
+
           # Stop
           time :due_date, :trie => true
+
           # Priority
           integer :priority_id, :references => IssuePriority
+
           # Assigned to
           integer :assigned_to_id, :references => User
+
           # Category
           integer :category_id, :references => IssueCategory
-          
+
           # Name of Project
           string :project_name, stored: true
 

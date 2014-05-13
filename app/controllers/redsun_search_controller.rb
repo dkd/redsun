@@ -51,6 +51,7 @@ class RedsunSearchController < ApplicationController
         highlight :wiki_content
         highlight :name
         highlight :notes
+        highlight :id
       end
 
       any_of do
