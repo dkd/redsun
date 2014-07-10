@@ -3,9 +3,11 @@
   <%= will_paginate @search.results %>
 </div>
 
+<%= facet(:class_name, @search, :class_name) %>
+
 <% @search.each_hit_with_result do |hit, record| %>
   <div style="display: block; border-top: 1px solid #e9e9e9; clear: left; background: <%= !record.active? ? "red" : "" %>">
-    <div style="float:left; width: 70%">
+    <div style="float:left; width: 70%" class="redsun-result-item">
       <%= render "redsun_search/results/#{hit.class_name.underscore}_result", hit: hit, record: record %>
     </div>
     <div style="float:right;padding-top: 2em">
@@ -24,13 +26,22 @@
 </div>
     <style>
       ul.facets {
-          max-height: 200px;
-          overflow: scroll;
+        max-height: 200px;
+        overflow: scroll;
+      }
+      .redsun-result-item .redsun-highlight {
+        background: #FDBF8D;
+        padding: 2px;
+        border-radius: 2px;
+        -webkit-transition: background 2000ms ease-in-out;
+        -moz-transition: background 2000ms ease-in-out;
+        -ms-transition: background 2000ms ease-in-out;
+        -o-transition: background 2000ms ease-in-out;
+        transition: background 2000ms ease-in-out;
       }
     </style>
     
-<% content_for :sidebar do %>  
-  <%= facet(:class_name, @search, :class_name) %>
+<% content_for :sidebar do %>
   <%= facet(:project_name, @search, :project_name) %>
   <%= facet(:active, @search, :active) %>
   <%= facet(:author_id, @search, :login) %>

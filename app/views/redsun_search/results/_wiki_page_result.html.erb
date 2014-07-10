@@ -7,8 +7,8 @@
 <% end %>
 <p>
   <% if hit.highlights(:wiki_content).present? %>
-    <%= strip_tags(hit.highlights(:wiki_content)).collect { |segment| segment.format { |word| "<span class='highlight'>#{word}</span>" }}.join(" ").html_safe %>
+    <%= highlighter_for(:wiki_content, hit, record, true) %>
   <% else %>
-    <%= truncate record.content.text, length: 500 %>
+    <%=  strip_tags(truncate(record.content.text, length: 500)) %>
   <% end %>
 </p>

@@ -76,7 +76,7 @@ class RedsunSearchController < ApplicationController
           with(:journalized_type, "Issue")
           with(:is_private, false)
         end
-        
+
       end
 
       %w(author_id project_name assigned_to_id status_id tracker_id).each do |easy_facet|
@@ -131,10 +131,10 @@ class RedsunSearchController < ApplicationController
     end
     @searchstring = searchstring
 
-    rescue Errno::ECONNREFUSED
-      render "connection_refused"
-    rescue RSolr::Error::Http
-      render "connection_refused"
+   # rescue Errno::ECONNREFUSED
+   #   render "connection_refused"
+   # rescue RSolr::Error::Http
+   #   render "connection_refused"
     end
   end
 
