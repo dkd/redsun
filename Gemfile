@@ -1,3 +1,5 @@
+source 'https://rubygems.dkd.de/'
+
 gem 'sunspot_rails'
 gem 'rsolr'
 gem 'will_paginate'
