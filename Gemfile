@@ -6,9 +6,8 @@ gem 'will_paginate'
 
 group :development do
   gem 'sunspot_solr'
-  gem 'progress_bar'
 end
 
-group :integration_develop, :testing_develop do
+group :integration_develop, :testing_develop, :development do
   gem 'progress_bar'
 end
