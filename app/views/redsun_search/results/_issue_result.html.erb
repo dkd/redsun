@@ -6,5 +6,5 @@
   </h5>
 <% end %>
 <p>
-  <%= highlighter_for :description, hit, record, true %>
+  <%= sanitize highlighter_for(:description, hit, record, true), tags: %w(span b strong a), attributes: %w(class style href target) %>
 </p>
