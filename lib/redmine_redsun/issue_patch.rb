@@ -47,7 +47,7 @@ module RedmineRedsun
 
           # Journals entries, i.e. status updates, comments, etc.
           text :comments, :stored => true, :boost => 9 do
-            journals.where("journals.notes != ''").map { |j| j.notes.split.join(' ') if j.notes.present? }
+            journals.where("journals.notes != ''").map { |j| j.notes.gsub(/[[:cntrl:]]/, '').split.join(' ') if j.notes.present? }
           end
 
           # Updated at

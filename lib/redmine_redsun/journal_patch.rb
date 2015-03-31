@@ -31,7 +31,7 @@ module RedmineRedsun
           
           # Notes
           text :notes, stored: true, boost: 9 do
-            notes.split.join(' ') unless notes.blank? 
+            notes.gsub(/[[:cntrl:]]/, '').split.join(' ') unless notes.blank? 
           end
 
           # Project ID
