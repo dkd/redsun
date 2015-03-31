@@ -9,7 +9,9 @@ module RedsunSearchHelper
       sanitized_field = strip_tags == true ? strip_tags(hit.highlights(field)) : hit.highlights(field)
       sanitized_field.collect { |segment| segment.format { |word| "<span class='redsun-highlight'>#{word}</span>" }}.join(" ").html_safe
     else
-      strip_tags == true ? strip_tags(record.send(field)) : record.send(field)
+      if record.respond_to?(field.to_sym)
+        strip_tags == true ? strip_tags(record.send(field)) : record.send(field)
+      end
     end
   end
 

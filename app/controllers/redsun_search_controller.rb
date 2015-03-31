@@ -47,6 +47,7 @@ class RedsunSearchController < ApplicationController
     @search = Sunspot.search([Project, Issue, WikiPage, Journal]) do
       fulltext searchstring do
         highlight :description
+        highlight :comments
         highlight :subject
         highlight :wiki_content
         highlight :name

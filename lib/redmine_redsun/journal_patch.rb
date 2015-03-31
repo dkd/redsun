@@ -30,8 +30,8 @@ module RedmineRedsun
           end
           
           # Notes
-          text :notes, :stored => true, :boost => 9 do
-            notes.scan(/[[:print:]]/).join if notes.present?
+          text :notes, stored: true, boost: 9 do
+            notes.split.join(' ') unless notes.blank? 
           end
 
           # Project ID

@@ -24,6 +24,7 @@ en:
         "false": "No"
         "true": "Yes"
     facet:
+      reset_object_facet: "Show all objects"
       remove: "- remove"
       created_on: "Created On"
       author_id: "Author"

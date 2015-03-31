@@ -7,4 +7,5 @@
 <% end %>
 <p>
   <%= sanitize highlighter_for(:description, hit, record, true), tags: %w(span b strong a), attributes: %w(class id style href target) %>
+  <%= sanitize highlighter_for(:comments, hit, record, true), tags: %w(span b strong a), attributes: %w(class id style href target) %>
 </p>

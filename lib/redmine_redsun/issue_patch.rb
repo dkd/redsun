@@ -46,8 +46,8 @@ module RedmineRedsun
           integer :project_id
 
           # Journals entries, i.e. status updates, comments, etc.
-          text :journals do
-            journals.map { |j| j.notes.scan(/[[:print:]]/).join if j.notes.present? }
+          text :comments, :stored => true, :boost => 9 do
+            journals.where("journals.notes != ''").map { |j| j.notes.split.join(' ') if j.notes.present? }
           end
 
           # Updated at

@@ -38,6 +38,7 @@ de:
         wikipage: "Wikiseite"
         project: "Projekt"
     facet:
+      reset_object_facet: "Alle Objekte anzeigen"
       remove: "- entfernen"
       created_on: "Erstellungszeitraum"
       updated_on: "Aktualisierungdatum"

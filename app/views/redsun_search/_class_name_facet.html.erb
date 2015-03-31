@@ -1,0 +1,20 @@
+<% if results.facet(facet).present? && results.facet(facet).rows && results.facet(facet).rows.count >= 1 %>
+
+  <div class="tabs">
+    <ul>
+    <% results.facet(facet.to_sym).rows.each do |result| %>
+      <li>
+          <%= link_to "#{t('redsun.facets.values.'+result.value.to_s.downcase.tr(" ", "_"), default: result.value)} (#{result.count})",
+          url_for(search_form: {facet.to_sym => result.value}.reverse_merge(params[:search_form])), class: :selected
+          %>
+      </li>
+      <% end -%>
+      <% if results.facet(facet).present? && results.facet(facet).rows && results.facet(facet).rows.count == 1 %>
+        <li>
+          <%= link_to t("redsun.facet.reset_object_facet"), url_for(search_form: {facet.to_sym => ""}.reverse_merge(params[:search_form]) ) %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+<% end -%>
+
