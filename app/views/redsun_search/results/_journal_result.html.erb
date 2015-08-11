@@ -9,6 +9,6 @@
   <% if hit.highlights(:notes).empty? %>
     <%= truncate strip_tags(record.notes), length: 100 %>
   <% else %>
-    <%= sanitize highlighter_for(:notes, hit, record, true), tags: %w(span b strong a), attributes: %w(class id style href target) %>
+    <%= sanitize highlighter_for(:notes, hit, record), tags: %w(span b strong a), attributes: %w(class id style href target) %>
   <% end %>
 </p>
