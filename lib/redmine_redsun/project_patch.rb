@@ -1,11 +1,9 @@
 require_dependency 'project'
-
-
+# :nodoc:
 module RedmineRedsun
- # Patches Redmine's Project dynamically.
+  # Patches Redmine's Project dynamically.
   module ProjectPatch
     def self.included(base) # :nodoc:
-
       base.extend ClassMethods
       base.send(:include, InstanceMethods)
 
@@ -14,7 +12,6 @@ module RedmineRedsun
         unloadable # Send unloadable so it will not be unloaded in development
 
         searchable do
-
           # Class Name
           string :class_name, stored: true
 
@@ -31,28 +28,24 @@ module RedmineRedsun
           integer :project_id, using: :id
 
           # Active?
-          boolean :active, stored: true do 
+          boolean :active, stored: true do
             active?
           end
 
           # Name of Project
           string :project_name, using: :name, stored: true
         end
-     end
-
+      end
     end
 
+    # :nodoc:
     module ClassMethods
-
     end
-
+    # :nodoc:
     module InstanceMethods
-
       def class_name
         self.class.name
       end
-
     end
-
   end
 end
