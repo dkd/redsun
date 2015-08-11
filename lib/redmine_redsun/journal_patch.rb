@@ -54,7 +54,7 @@ module RedmineRedsun
     module ClassMethods
     end
 
-    # We need to add some methods
+    # :nodoc:
     module InstanceMethods
 
       def class_name
