@@ -1,8 +1,8 @@
-# encoding: UTF-8
 require_dependency 'project'
 
-# Patches Redmine's User dynamically.
+
 module RedmineRedsun
+ # Patches Redmine's Project dynamically.
   module ProjectPatch
     def self.included(base) # :nodoc:
 

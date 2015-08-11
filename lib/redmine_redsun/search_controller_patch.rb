@@ -23,7 +23,7 @@ module RedmineRedsun
     module InstanceMethods
 
       def pick_search_engine
-        return true if !Setting[:plugin_redmine_redsun]["enable_solr_search"]
+        return true if !Setting[:plugin_redmine_redsun]["enable_solr_search_field"]
         if @project.present?
           search_scope = "project"
           project_id = @project.id

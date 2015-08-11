@@ -18,7 +18,7 @@ de:
   redsun:
     inactive: "Deaktiviert"
     settings:
-      enable_solr_search: "Solr Suche aktivieren"
+      enable_solr_search_field: "Solr Suche aktivieren"
     journal: "Kommentar"
     issue: "Ticket"
     wiki_page: "Wikiseite"

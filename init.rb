@@ -9,7 +9,7 @@ Redmine::Plugin.register :redmine_redsun do
   author_url 'http://www.dkd.de'
 
   settings default: {
-    enable_solr_search: false
+    enable_solr_search_field: false
   }, partial: 'settings/redsun_settings'
   
 end
