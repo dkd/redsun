@@ -32,7 +32,7 @@ module RedmineRedsun
           end
 
           # Content of Page
-          text :wiki_content, stored: true, boost: 7  do
+          text :wiki_content, stored: true, boost: 7 do
             content.text.scan(/[[:print:]]/).join
           end
 

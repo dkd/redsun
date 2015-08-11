@@ -1,5 +1,5 @@
 require File.dirname(__FILE__) + '/../test_helper'
-
+# :nodoc:
 class SunspotSearchControllerTest < ActionController::TestCase
   # Replace this with your real tests.
   def test_truth
