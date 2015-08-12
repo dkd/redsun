@@ -134,7 +134,11 @@ class RedsunSearchController < ApplicationController
       order_by(:score, :desc)
     end
     @searchstring = searchstring
-
+  
+  # Accessing results will trigger a NoMethodError if the Solr server is gone
+  @search.results.present?
+  rescue NoMethodError
+    render 'connection_refused'
   rescue Errno::ECONNREFUSED
     render 'connection_refused'
   rescue RSolr::Error::Http
@@ -143,64 +147,64 @@ class RedsunSearchController < ApplicationController
 
   protected
 
-    def set_search_form
-      params[:search_form] = {} unless params[:search_form].present?
+  def set_search_form
+    params[:search_form] = {} unless params[:search_form].present?
 
-      if params[:project_id].present?
-        @project = Project.find(params[:project_id])
-      elsif params[:search_form][:project_id].present?
-        @project = Project.find(params[:search_form][:project_id])
-      end
-
-      # Reset facets if search button is pressed
-      if params[:commit].present?
-        [:author_id,
-         :status_id,
-         :tracker_id,
-         :priority_id,
-         :created_on,
-         :updated_on,
-         :class_name,
-         :active].each do |facet|
-          params[:search_form].delete(facet) if params[:search_form][facet].present?
-        end
-      end
-
-      if params[:search_form].present? && Issue::SORT_FIELDS.include?(params[:search_form][:sort_field])
-        @sort_field = params[:search_form][:sort_field]
-      else
-        @sort_field = 'score'
-      end
-
-      if params[:search_form].present? && Issue::SORT_ORDER.collect(&:first).include?(params[:search_form][:sort_order])
-        @sort_order = params[:search_form][:sort_order]
-      else
-        @sort_order = 'DESC'
-      end
-
-      @scope = params[:search_form][:scope] || 'all_projects'
-      @scope_selector = [[l(:label_my_projects), 'my_projects'], [l(:label_project_all), 'all_projects']]
-      @redsun_path = @project.present? ? redsun_project_search_path(project_id: @project.id) : redsun_search_path
-      @scope_selector.push([l(:label_and_its_subprojects, @project.name), 'project']) if @project
+    if params[:project_id].present?
+      @project = Project.find(params[:project_id])
+    elsif params[:search_form][:project_id].present?
+      @project = Project.find(params[:search_form][:project_id])
     end
 
-    def date_conditions
-      conditions = []
-      conditions << { name: :last_7_days,   date: (Time.now - 7.day)     }
-      conditions << { name: :last_month,    date: (Time.now - 31.day)    }
-      conditions << { name: :last_3_months, date: (Time.now - 3.months)  }
-      conditions << { name: :last_6_months, date: (Time.now - 6.months)  }
-      conditions << { name: :older,         date: (Time.now - 12.months) }
-      conditions
+    # Reset facets if search button is pressed
+    if params[:commit].present?
+      [:author_id,
+       :status_id,
+       :tracker_id,
+       :priority_id,
+       :created_on,
+       :updated_on,
+       :class_name,
+       :active].each do |facet|
+        params[:search_form].delete(facet) if params[:search_form][facet].present?
+      end
     end
+
+    if params[:search_form].present? && Issue::SORT_FIELDS.include?(params[:search_form][:sort_field])
+      @sort_field = params[:search_form][:sort_field]
+    else
+      @sort_field = 'score'
+    end
+
+    if params[:search_form].present? && Issue::SORT_ORDER.collect(&:first).include?(params[:search_form][:sort_order])
+      @sort_order = params[:search_form][:sort_order]
+    else
+      @sort_order = 'DESC'
+    end
+
+    @scope = params[:search_form][:scope] || 'all_projects'
+    @scope_selector = [[l(:label_my_projects), 'my_projects'], [l(:label_project_all), 'all_projects']]
+    @redsun_path = @project.present? ? redsun_project_search_path(project_id: @project.id) : redsun_search_path
+    @scope_selector.push([l(:label_and_its_subprojects, @project.name), 'project']) if @project
+  end
+
+  def date_conditions
+    conditions = []
+    conditions << { name: :last_7_days,   date: (Time.now - 7.day)     }
+    conditions << { name: :last_month,    date: (Time.now - 31.day)    }
+    conditions << { name: :last_3_months, date: (Time.now - 3.months)  }
+    conditions << { name: :last_6_months, date: (Time.now - 6.months)  }
+    conditions << { name: :older,         date: (Time.now - 12.months) }
+    conditions
+  end
 
   private
 
-    def find_optional_project
-      return true unless params[:id]
-      @project = Project.find(params[:id])
-      check_project_privacy
-    rescue ActiveRecord::RecordNotFound
-      render_404
-    end
+  def find_optional_project
+    return true unless params[:id]
+    @project = Project.find(params[:id])
+    check_project_privacy
+  rescue ActiveRecord::RecordNotFound
+    render_404
+  end
 end

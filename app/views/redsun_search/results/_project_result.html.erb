@@ -4,5 +4,5 @@
   <%= authoring(record.created_on, nil )%>
 </h5>
 <p>
-  <%= strip_tags(hit.highlights(:description)).collect { |segment| segment.format { |word| "<span class='highlight'>#{word}</span>" }}.join(" ").html_safe %>
+  <%= sanitize highlighter_for(:description, hit, record), tags: %w(span b strong a), attributes: %w(class id style href target) %>
 </p>
