@@ -2,7 +2,7 @@
 en:
   redsun:
     settings:
-      enable_solr_search_field: "Enable Solr search"
+      enable_solr_search_field: "Use Solr instead of Redmine's default search"
     inactive: "Inactive"
     records: "Records"
     header: "Solr Search by RedSun"
