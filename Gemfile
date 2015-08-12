@@ -1,4 +1,4 @@
-source 'https://rubygems.dkd.de/'
+source 'https://rubygems.org/'
 
 gem 'sunspot_rails'
 gem 'rsolr'
