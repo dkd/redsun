@@ -5,7 +5,7 @@ Redmine::Plugin.register :redmine_redsun do
   author 'Kieran Hayes'
   description 'This plugin utilizes the sunspot gem for search'
   version '1.0.5'
-  url 'https://github.com/dkd/redsun'
+  url 'http://www.dkd.de'
   author_url 'http://www.dkd.de'
 
   settings default: {

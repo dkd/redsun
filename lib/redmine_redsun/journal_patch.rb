@@ -29,7 +29,7 @@ module RedmineRedsun
 
           # Notes
           text :notes, stored: true, boost: 9 do
-            notes.gsub(/(\r|\n)/, ' ').gsub(/[[:cntrl:]]/, '').split.join(' ') if notes.present?
+            notes.gsub(/[[:cntrl:]]/, ' ').scan(/[[:print:][:space:]]/).join if notes.present?
           end
 
           # Project ID

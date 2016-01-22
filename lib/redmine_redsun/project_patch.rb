@@ -16,10 +16,14 @@ module RedmineRedsun
           string :class_name, stored: true
 
           # Name
-          text :name, stored: true
+          text :name, stored: true do
+            name.gsub(/[[:cntrl:]]/, ' ').scan(/[[:print:][:space:]]/).join if name.present?
+          end
 
           # Description
-          text :description, stored: true
+          text :description, stored: true do
+            description.gsub(/[[:cntrl:]]/, ' ').scan(/[[:print:][:space:]]/).join if description.present?
+          end
 
           # ID
           text :id, stored: true
@@ -33,7 +37,9 @@ module RedmineRedsun
           end
 
           # Name of Project
-          string :project_name, using: :name, stored: true
+          text :project_name, stored: true, boost: 10 do
+            name.gsub(/[[:cntrl:]]/, ' ').scan(/[[:print:][:space:]]/).join if name.present?
+          end
         end
       end
     end

@@ -4,7 +4,6 @@ de:
     page_entries_info:
       multi_page: "Zeige %{from} - %{to} Ergebnisse von insgesamt %{count}"
       multi_page_html: "Zeige <b>%{from}&nbsp;-&nbsp;%{to}</b> von <b>%{count}</b> insgesamt"
-        
       single_page:
         one: "Zeige 1 Ergebnis"
         other: "Zeige alle %{count} Ergebnisse"
@@ -18,7 +17,7 @@ de:
   redsun:
     inactive: "Deaktiviert"
     settings:
-      enable_solr_search_field: "Solr-Suche anstelle Redmines Standardsuche verwenden"
+      enable_solr_search_field: "Solr Suche aktivieren"
     journal: "Kommentar"
     issue: "Ticket"
     wiki_page: "Wikiseite"
@@ -29,6 +28,7 @@ de:
     order: Sortierung
     no_results: "Es konnten leider keine Suchergebnisse gefunden werden."
     reset: "Zurücksetzen"
+    hints: "Benutze * als Platzhalter, um mehr Suchergebnisse zu erhalten."
     facets:
       values:
         "false": "Nein"

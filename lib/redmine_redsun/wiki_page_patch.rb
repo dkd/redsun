@@ -10,7 +10,7 @@ module RedmineRedsun
       # Same as typing in the class
       base.class_eval do
         unloadable # Send unloadable so it will not be unloaded in development
-
+        after_commit ->{ self.index }
         searchable do
           # ID
           text :id, stored: true
@@ -27,13 +27,13 @@ module RedmineRedsun
           end
 
           # Page Title
-          text :title, stored: true, boost: 9 do
-            title.scan(/[[:print:]]/).join
+          text :title, stored: true, boost: 10 do
+            title.gsub(/[[:cntrl:]]/, ' ').gsub(/_/, ' ').scan(/[[:print:][:space:]]/).join
           end
 
           # Content of Page
-          text :wiki_content, stored: true, boost: 7 do
-            content.text.scan(/[[:print:]]/).join
+          text :wiki_content, stored: true, boost: 8 do
+            content.text.gsub(/[[:cntrl:]]/, ' ').scan(/[[:print:][:space:]]/).join unless content.nil?
           end
 
           # Updated at
@@ -41,11 +41,8 @@ module RedmineRedsun
 
           #  Creator
           integer :author_id, references: User do
-            content.author_id
+            content.author_id unless content.nil?
           end
-
-          # Name of Project
-          string :project_name, stored: true
         end
       end
     end
@@ -65,10 +62,6 @@ module RedmineRedsun
 
       def project_id
         wiki.project_id
-      end
-
-      def project_name
-        project.name if project
       end
 
       def active?

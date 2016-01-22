@@ -32,12 +32,12 @@ module RedmineRedsun
 
           # Subject
           text :subject, stored: true, boost: 9 do
-            subject.scan(/[[:print:]]/).join if subject.present?
+            subject.gsub(/[[:cntrl:]]/, ' ').scan(/[[:print:][:space:]]/).join if subject.present?
           end
 
           # Description
           text :description, stored: true, boost: 7 do
-            description.scan(/[[:print:]]/).join if description.present?
+            description.gsub(/[[:cntrl:]]/, ' ').scan(/[[:print:][:space:]]/).join if description.present?
           end
 
           # Project ID
@@ -45,7 +45,7 @@ module RedmineRedsun
 
           # Journals entries, i.e. status updates, comments, etc.
           text :comments, stored: true, boost: 9 do
-            journals.where("journals.notes != ''").map { |j| j.notes.gsub(/(\r|\n)/, ' ').gsub(/[[:cntrl:]]/, '').split.join(' ') if j.notes.present? }
+            journals.where("journals.notes != ''").map { |j| j.notes.gsub(/[[:cntrl:]]/, ' ').scan(/[[:print:][:space:]]/).join if j.notes.present? }.join(' ')
           end
 
           # Updated at

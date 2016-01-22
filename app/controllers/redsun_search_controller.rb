@@ -53,6 +53,7 @@ class RedsunSearchController < ApplicationController
         highlight :name
         highlight :notes
         highlight :id
+        highlight :title
       end
 
       any_of do
@@ -134,11 +135,7 @@ class RedsunSearchController < ApplicationController
       order_by(:score, :desc)
     end
     @searchstring = searchstring
-  
-  # Accessing results will trigger a NoMethodError if the Solr server is gone
-  @search.results.present?
-  rescue NoMethodError
-    render 'connection_refused'
+
   rescue Errno::ECONNREFUSED
     render 'connection_refused'
   rescue RSolr::Error::Http

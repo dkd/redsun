@@ -2,7 +2,7 @@
 en:
   redsun:
     settings:
-      enable_solr_search_field: "Use Solr instead of Redmine's default search"
+      enable_solr_search_field: "Enable Solr search"
     inactive: "Inactive"
     records: "Records"
     header: "Solr Search by RedSun"
@@ -15,6 +15,7 @@ en:
     wiki_page: "Wiki Page"
     project: "Project"
     search_button: "Search!"
+    hints: "Use * as wildcard in order to find more results."
     facets:
       values:
         journal: "Comment"

@@ -1,18 +1,18 @@
 <br><%= page_entries_info @search.results, {model: "record"} %>
-<div style="text-align:center;margin-bottom: 2em">
+<div class="redsun-pagination-top">
   <%= will_paginate @search.results %>
 </div>
 
 <%= facet(:class_name, @search, :class_name, "class_name_facet") %>
 
 <% @search.each_hit_with_result do |hit, record| %>
-  <div style="background: <%= !record.active? ? "red" : "" %>" class="redsun-result">
-    <div style="float:left; width: 70%" class="redsun-result-item">
+  <div class="redsun-result <%=record.active?  ? "" : "redsun-inactive"%>">
+    <div class="redsun-result-item">
       <%= render "redsun_search/results/#{hit.class_name.underscore}_result", hit: hit, record: record %>
     </div>
     <div style="float:right;padding-top: 2em">
       <% if !record.active? %>
-        <span style="background: red; color:white; padding: 1em;border-radius: 10px">
+        <span class="redsun-label-inactive">
           <%= t "redsun.inactive" %>
         </span>
       <% end %>
@@ -21,36 +21,9 @@
 
 <% end %>
 
-<div style="text-align:center; clear: both;margin-top: 1em">
+<div class="redsun-pagination-bottom">
  <%= will_paginate @search.results %>
 </div>
-    <style>
-      .redsun-result {
-        display: table; 
-        width: 100%;
-        border-bottom: 1px solid #e9e9e9; 
-        clear: left;
-        background: white;
-      }
-      .redsun-result:hover {
-        background: #f4f4f4;
-      }
-      ul.facets {
-        max-height: 200px;
-        overflow: scroll;
-      }
-      .redsun-result-item .redsun-highlight {
-        background: #FDBF8D;
-        padding: 2px;
-        border-radius: 2px;
-        -webkit-transition: background 2000ms ease-in-out;
-        -moz-transition: background 2000ms ease-in-out;
-        -ms-transition: background 2000ms ease-in-out;
-        -o-transition: background 2000ms ease-in-out;
-        transition: background 2000ms ease-in-out;
-      }
-    </style>
-    
 <% content_for :sidebar do %>
   <%= facet(:project_name, @search, :project_name) %>
   <%= facet(:active, @search, :active) %>
