@@ -7,7 +7,7 @@
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/github-light.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -29,17 +29,17 @@
       </header>
       <section>
         <h3>
-<a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h3>
+<a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Introduction</h3>
 
 <p>Redsun is a Redmine plugin that replaces the existing search with a fast Apache Solr powered engine.</p>
 
 <h4>
-<a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h4>
+<a id="features" class="anchor" href="#features" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Features</h4>
 
 <p>Redsun will respect any viewing restrictions on records to make sure people will only see results they are supposed to see.</p>
 
 <h4>
-<a id="models" class="anchor" href="#models" aria-hidden="true"><span class="octicon octicon-link"></span></a>Models</h4>
+<a id="models" class="anchor" href="#models" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Models</h4>
 
 <p>Currently only four models are being indexed. We plan to add news and attachments in the future.</p>
 
@@ -51,7 +51,7 @@
 </ul>
 
 <h4>
-<a id="facets" class="anchor" href="#facets" aria-hidden="true"><span class="octicon octicon-link"></span></a>Facets</h4>
+<a id="facets" class="anchor" href="#facets" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Facets</h4>
 
 <ul>
 <li>Project</li>
@@ -65,25 +65,25 @@
 </ul>
 
 <h3>
-<a id="localization" class="anchor" href="#localization" aria-hidden="true"><span class="octicon octicon-link"></span></a>Localization</h3>
+<a id="localization" class="anchor" href="#localization" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Localization</h3>
 
 <p>Currently, only German and English are being supported.</p>
 
 <h4>
-<a id="supported-redmine-versions" class="anchor" href="#supported-redmine-versions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Supported Redmine Versions</h4>
+<a id="supported-redmine-versions" class="anchor" href="#supported-redmine-versions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Supported Redmine Versions</h4>
 
 <h4>
-<a id="redmine-2x" class="anchor" href="#redmine-2x" aria-hidden="true"><span class="octicon octicon-link"></span></a>Redmine 2.x</h4>
+<a id="redmine-2x" class="anchor" href="#redmine-2x" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Redmine 2.x</h4>
 
 <p>We have successfully used Redsun 1.0.3 with Redmine 2.3-2.6.</p>
 
 <h4>
-<a id="redmine-3x" class="anchor" href="#redmine-3x" aria-hidden="true"><span class="octicon octicon-link"></span></a>Redmine 3.x</h4>
+<a id="redmine-3x" class="anchor" href="#redmine-3x" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Redmine 3.x</h4>
 
 <p>Please use Redsun &gt;= 1.0.4 if you are using Redmine 3.x</p>
 
 <h4>
-<a id="basic-installation" class="anchor" href="#basic-installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Basic Installation</h4>
+<a id="basic-installation" class="anchor" href="#basic-installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Basic Installation</h4>
 
 <p>We recommend to test this plugin locally.</p>
 
@@ -92,9 +92,9 @@
 <li>cd plugins</li>
 <li>git clone <a href="mailto:git@github.com">git@github.com</a>:dkd/redsun.git redmine_redsun</li>
 <li>run bundle install</li>
-<li>rails g sunspot_rails:install</li>
-<li>bundle exec sunspot:solr:start</li>
-<li>bundle exec sunspot:solr:reindex</li>
+<li>rails generate sunspot_rails:install</li>
+<li>bundle exec rake sunspot:solr:start</li>
+<li>bundle exec rake sunspot:solr:reindex</li>
 <li>restart Redmine</li>
 <li>enable Redsun within the plugin's settings section</li>
 </ul>
