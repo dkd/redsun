@@ -1,4 +1,5 @@
 de:
+  field_score: "Suchtreffer"
   will_paginate:
     next_label: "Weiter →"
     page_entries_info:
@@ -15,9 +16,22 @@ de:
     page_gap: '&hellip;'
     previous_label: "← Vorige"
   redsun:
+    placeholder:
+      project_name: "Wähle ein Projekt"
+      author_id: "Wähle einen Autor"
+      status_id: "Wähle einen Status"
+      tracker_id: "Wähle einen Tracker"
+      priority_id: "Wähle eine Priorität"
+      filetype: "Wähle einen Dateityp"
+      assigned_to_id: "Wähle zugewiesen an"
+      created_on: "Wähle einen Datumsbereich"
+      updated_on: "Wähle einen Datumsbereich"
+      category_id: "Wähle eine Kategorie"
     inactive: "Deaktiviert"
     settings:
       enable_solr_search_field: "Solr Suche aktivieren"
+      enable_select2_plugin: "Select2 Plugin aktivieren"
+    spellcheck_question: "Meintest du vielleicht?"
     journal: "Kommentar"
     issue: "Ticket"
     wiki_page: "Wikiseite"
@@ -33,10 +47,11 @@ de:
       values:
         "false": "Nein"
         "true": "Ja"
-        journal: "Kommentar"
-        issue: "Ticket"
-        wikipage: "Wikiseite"
-        project: "Projekt"
+        journal: "Kommentare"
+        issue: "Tickets"
+        attachment: "Dateien"
+        wikipage: "Wikiseiten"
+        project: "Projekte"
     facet:
       reset_object_facet: "Alle Objekte anzeigen"
       remove: "- entfernen"
@@ -52,10 +67,12 @@ de:
       status_id: "Status"
       tracker_id: "Tracker"
       priority_id: "Priorität"
+      filetype: "Dateityp"
       assigned_to_id: "Zugewiesen an"
       active: "Aktiv?"
       class_name: "Objekt-Typ"
       project_name: "Projekt"
+      category_id: "Ticketkategorie"
     connection_refused_header: "Redsun: Solr Server ist nicht erreichbar"
     connection_refused_admin_message: "Bitte deaktivieren Sie in den Redsun-Plugin Einstellungen die Solr-Suche solange das Problem nicht gelöst ist."
     connection_refused_user_message: "Please contact your admin."

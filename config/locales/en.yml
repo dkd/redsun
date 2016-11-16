@@ -1,8 +1,27 @@
 # English strings go here for Rails i18n
 en:
+  field_score: "Search Score"
+  will_paginate:
+    previous_label: "&laquo; Previous"
+    next_label: "Next &raquo;"
+    page_gap: "&hellip;"
+    page_entries_info:
+      single_page:
+        zero:  "No %{model} found"
+        one:   "Displaying 1 %{model}"
+        other: "Displaying all %{count} %{model}"
+      single_page_html:
+        zero:  "No %{model} found"
+        one:   "Displaying <b>1</b> %{model}"
+        other: "Displaying <b>all&nbsp;%{count}</b> %{model}"
+    
+      multi_page: "Displaying %{model} %{from} - %{to} of %{count} in total"
+      multi_page_html: "Displaying %{model} <b>%{from}&nbsp;-&nbsp;%{to}</b> of <b>%{count}</b> in total"
   redsun:
     settings:
       enable_solr_search_field: "Enable Solr search"
+      enable_select2_plugin: "Use Select2 Plugin"
+    spellcheck_question: "Did you mean?"
     inactive: "Inactive"
     records: "Records"
     header: "Solr Search by RedSun"
@@ -11,11 +30,23 @@ en:
     no_results: "Sorry, no results found."
     reset: "Reset"
     journal: "Comment"
-    issue: "Issue"
-    wiki_page: "Wiki Page"
-    project: "Project"
+    issue: "Issues"
+    attachment: "Files"
+    wiki_page: "Wiki Pages"
+    project: "Projects"
     search_button: "Search!"
     hints: "Use * as wildcard in order to find more results."
+    placeholder:
+      project_name: "Select Project"
+      author_id: "Select Author"
+      status_id: "Select Status"
+      tracker_id: "Select an Tracker"
+      priority_id: "Select Priority"
+      filetype: "Select a File Type"
+      assigned_to_id: "Select Assignee"
+      created_on: "Select Date Range"
+      updated_on: "Select Date Range"
+      category_id: "Select Issue Category"
     facets:
       values:
         journal: "Comment"
@@ -31,8 +62,10 @@ en:
       author_id: "Author"
       status_id: "Status"
       tracker_id: "Tracker"
-      priority_id: "Prioritiy"
+      priority_id: "Priority"
+      filetype: "File Type"
       assigned_to_id: "Assigned to"
+      category_id: "Issue Category"
       date_range_rows:
         last_7_days: "last 7 days"
         last_month: "last 30 days"

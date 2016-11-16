@@ -2,7 +2,7 @@
 <h3><%= link_to highlighter_for(:title, hit, record).html_safe, record %></h3>
 <% if record.content.updated_on && record.content.author %>
 <h5>
-  <%= avatar(record.content.author, :size => "16") %><%= authoring(record.content.updated_on, record.content.author, label: :label_updated_time_by)%>
+  <%= avatar(record.content.author, :size => "16") %> <%= authoring(record.content.updated_on, record.content.author, label: :label_updated_time_by)%>
 </h5>
 <% end %>
 <p>

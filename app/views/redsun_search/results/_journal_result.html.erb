@@ -1,8 +1,13 @@
-<% title = record.journalized_type == "Issue" ? " #{record.journalized.subject}" : " " %>
-<h5><%= t "redsun.journal" %> #<%= highlighter_for(:id, hit, record) %> | <%= link_to ("#{t("field_#{record.journalized_type.downcase}")} ##{record.journalized.id}#{title}"), "#{url_for(record.journalized)}#history" %> in <%= link_to record.try(:project).try(:name), record.try(:project) %></small></h5>
+<% title = record.journalized_type == 'Issue' ? " #{record.journalized.subject}" : ' ' %>
+<h5>
+  <%= link_to "#{t('redsun.journal')} ##{issue_coment_number(record.id).to_s}", issue_comment_path(record.id) %>
+  in
+  <%= link_to ("#{t("field_#{record.journalized_type.downcase}")} ##{record.journalized.id}#{title}"), "#{url_for(record.journalized)}" %> in <%= link_to record.try(:project).try(:name), record.try(:project) %>
+  </small>
+</h5>
 <% if record.created_on %>
   <h5>
-    <%= avatar(record.user, :size => "16") %><%= authoring(record.created_on, record.user )%>
+    <%= avatar(record.user, :size => '16') %> <%= authoring(record.created_on, record.user )%>
   </h5>
 <% end %>
 <p>

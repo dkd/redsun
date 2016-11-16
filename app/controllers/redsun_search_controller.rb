@@ -2,8 +2,8 @@
 class RedsunSearchController < ApplicationController
   unloadable
 
-  before_filter :find_optional_project
-  before_filter :set_search_form
+  before_action :find_optional_project
+  before_action :set_search_form
 
   def index
     searchstring = params[:search_form][:searchstring] || ''
@@ -18,13 +18,13 @@ class RedsunSearchController < ApplicationController
     allowed_issues = []
     allowed_wikis = []
 
-    if @project && @scope == 'project'
+    if @project && search_scope == 'project'
       params[:search_form][:project_id] = @project.id
       projects = @project.self_and_descendants.all
       allowed_projects << projects.collect { |p| p.id if User.current.allowed_to?(:view_project, p) }.compact
       allowed_issues << projects.collect { |project| project .id if User.current.allowed_to?(:view_issues, project) }.compact
       allowed_wikis << projects.collect { |project| project.id if User.current.allowed_to?(:view_wiki_pages, @project) }.compact
-    elsif @scope == 'my_projects'
+    elsif search_scope == 'my_projects'
       projects = User.current.memberships.collect(&:project).compact.uniq
       allowed_projects << projects.collect(&:id)
       allowed_issues << projects.collect { |project| project.id if User.current.allowed_to?(:view_issues, project) }.compact
@@ -41,10 +41,7 @@ class RedsunSearchController < ApplicationController
     allowed_issues = allowed_issues.push(0)
     allowed_wikis = allowed_wikis.push(0)
 
-    sort_order = @sort_order
-    sort_field = @sort_field
-
-    @search = Sunspot.search([Project, Issue, WikiPage, Journal]) do
+    @search = Sunspot.search([Project, Issue, WikiPage, Journal, Attachment]) do
       fulltext searchstring do
         highlight :description
         highlight :comments
@@ -54,6 +51,7 @@ class RedsunSearchController < ApplicationController
         highlight :notes
         highlight :id
         highlight :title
+        highlight :filename
       end
 
       any_of do
@@ -78,26 +76,35 @@ class RedsunSearchController < ApplicationController
           with(:journalized_type, 'Issue')
           with(:is_private, false)
         end
+
+        all_of do
+          with :class, Attachment
+          with(:project_id).any_of allowed_projects.flatten
+        end
+
       end
 
       %w(author_id
          project_name
          assigned_to_id
+         priority_id
+         tracker_id
          status_id
-         tracker_id).each do |easy_facet|
+         filetype
+         category_id).each do |easy_facet|
         facet easy_facet, minimum_count: 1
         if params.key?(:search_form) && params[:search_form][easy_facet].present?
           with(easy_facet, params[:search_form][easy_facet])
         end
       end
 
-      %w(priority_id
-         class_name).each do |easy_facet|
-        facet easy_facet, minimum_count: 1
-        if params.key?(:search_form) && params[:search_form][easy_facet.to_sym].present?
-          with(easy_facet, params[:search_form][easy_facet.to_sym])
-        end
-      end
+        # class filter
+        class_filter = if params[:search_form].key?(:class_name)
+                                with(:class_name).any_of(params[:search_form][:class_name])
+                             else
+                               all_of {} # not necessary for searching, but object is needed to set exclude option
+                             end
+        facet :class_name, minimum_count: 1, exclude: class_filter # exclude option gives access to full list of items
 
       %w(created_on updated_on).each do |date_facet|
         if params[:search_form].present? && params[:search_form][date_facet].present?
@@ -133,6 +140,7 @@ class RedsunSearchController < ApplicationController
 
       order_by(sort_field.to_sym, sort_order.downcase.to_sym)
       order_by(:score, :desc)
+      spellcheck :count => 3
     end
     @searchstring = searchstring
 
@@ -146,13 +154,6 @@ class RedsunSearchController < ApplicationController
 
   def set_search_form
     params[:search_form] = {} unless params[:search_form].present?
-
-    if params[:project_id].present?
-      @project = Project.find(params[:project_id])
-    elsif params[:search_form][:project_id].present?
-      @project = Project.find(params[:search_form][:project_id])
-    end
-
     # Reset facets if search button is pressed
     if params[:commit].present?
       [:author_id,
@@ -162,26 +163,17 @@ class RedsunSearchController < ApplicationController
        :created_on,
        :updated_on,
        :class_name,
-       :active].each do |facet|
+       :active,
+       :project_name].each do |facet|
         params[:search_form].delete(facet) if params[:search_form][facet].present?
       end
     end
-
-    if params[:search_form].present? && Issue::SORT_FIELDS.include?(params[:search_form][:sort_field])
-      @sort_field = params[:search_form][:sort_field]
-    else
-      @sort_field = 'score'
-    end
-
-    if params[:search_form].present? && Issue::SORT_ORDER.collect(&:first).include?(params[:search_form][:sort_order])
-      @sort_order = params[:search_form][:sort_order]
-    else
-      @sort_order = 'DESC'
-    end
-
     @scope = params[:search_form][:scope] || 'all_projects'
+    params[:search_form][:class_name] ||= []
+    @sort_field = sort_field
+    @sort_order = sort_order
     @scope_selector = [[l(:label_my_projects), 'my_projects'], [l(:label_project_all), 'all_projects']]
-    @redsun_path = @project.present? ? redsun_project_search_path(project_id: @project.id) : redsun_search_path
+    @redsun_path = @project.present? ? redsun_project_search_path(@project) : redsun_search_path
     @scope_selector.push([l(:label_and_its_subprojects, @project.name), 'project']) if @project
   end
 
@@ -197,9 +189,27 @@ class RedsunSearchController < ApplicationController
 
   private
 
+  def search_scope
+    params[:search_form][:scope] || 'all_projects'
+  end
+
+  def sort_order
+    return params[:search_form][:sort_order] if Issue::SORT_ORDER.collect(&:first).include?(params[:search_form][:sort_order])
+    'DESC'
+  end
+  
+  def sort_field
+    return params[:search_form][:sort_field] if Issue::SORT_FIELDS.include?(params[:search_form][:sort_field])
+    'score'
+  end
+
   def find_optional_project
-    return true unless params[:id]
-    @project = Project.find(params[:id])
+    return true unless (params[:id] || params[:project_id])
+    if params[:id] && controller.controller_name == "projects"
+      @project = Project.find(params[:id])
+    else
+      @project = Project.find(params[:project_id])
+    end
     check_project_privacy
   rescue ActiveRecord::RecordNotFound
     render_404

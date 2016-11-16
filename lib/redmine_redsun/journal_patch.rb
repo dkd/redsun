@@ -41,6 +41,9 @@ module RedmineRedsun
           # Issue creator
           integer :author_id, references: User
 
+          # Issue creator
+          integer :indice_for_sunspot, stored: true
+
           # Name of Project
           string :project_name, stored: true
 
@@ -56,6 +59,10 @@ module RedmineRedsun
 
     # :nodoc:
     module InstanceMethods
+
+      def indice_for_sunspot
+        journalized.journals.map(&:id).index(self.id)+1 if journalized.try(:journals)
+      end
 
       def class_name
         self.class.name

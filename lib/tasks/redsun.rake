@@ -11,6 +11,10 @@ end
 
 def reindex(project)
   project.index!
-  project.issues.each(&:index!)
-  project.wiki.pages.each(&:index!)
+  project.issues.map do |issue|
+    issue.index!
+    issue.journals.map &:index!
+  end
+  project.wiki.pages.map &:index!
+  project.attachments.map &:index!
 end
