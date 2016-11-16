@@ -1,37 +1,39 @@
-<br><%= page_entries_info @search.results, {model: "record"} %>
-<div class="redsun-pagination-top">
+<br><%= page_entries_info @search.results, { model: 'record' } %>
+<div class='redsun-pagination-top redsun-pagination'>
   <%= will_paginate @search.results %>
 </div>
 
-<%= facet(:class_name, @search, :class_name, "class_name_facet") %>
+<%= facet(:class_name, @search, :class_name, 'class_name_facet') %>
 
 <% @search.each_hit_with_result do |hit, record| %>
-  <div class="redsun-result <%=record.active?  ? "" : "redsun-inactive"%>">
+  <div class='redsun-result <%=record.active? ? nil : 'redsun-inactive'%>'>
     <div class="redsun-result-item">
       <%= render "redsun_search/results/#{hit.class_name.underscore}_result", hit: hit, record: record %>
     </div>
-    <div style="float:right;padding-top: 2em">
-      <% if !record.active? %>
+    <% unless record.active? %>
+      <div class="redsun-container-inactive">
         <span class="redsun-label-inactive">
-          <%= t "redsun.inactive" %>
+          <%= t('redsun.inactive') %>
         </span>
-      <% end %>
-    </div>
+      </div>
+    <% end %>
   </div>
 
 <% end %>
 
-<div class="redsun-pagination-bottom">
+<div class='redsun-pagination-bottom redsun-pagination'>
  <%= will_paginate @search.results %>
 </div>
 <% content_for :sidebar do %>
   <%= facet(:project_name, @search, :project_name) %>
+  <%= facet(:filetype, @search, :filetype) %>
   <%= facet(:active, @search, :active) %>
   <%= facet(:author_id, @search, :login) %>
   <%= facet(:assigned_to_id, @search, :login) %>
   <%= facet(:status_id, @search, :name) %>
   <%= facet(:tracker_id, @search, :name) %>
   <%= facet(:priority_id, @search, :name) %>
-  <%= facet(:created_on, @search, :created_on, "date_facet") %>
-  <%= facet(:updated_on, @search, :updated_on, "date_facet") %>
+  <%= facet(:category_id, @search, :name) %>
+  <%= facet(:created_on, @search, :created_on, 'date_facet') %>
+  <%= facet(:updated_on, @search, :updated_on, 'date_facet') %>
 <% end %>

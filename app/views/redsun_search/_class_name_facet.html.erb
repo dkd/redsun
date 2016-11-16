@@ -8,8 +8,13 @@
       </li>
       <% results.facet(facet.to_sym).rows.each do |result| %>
         <li>
-            <%= link_to "#{t('redsun.facets.values.'+result.value.to_s.downcase.tr(" ", "_"), default: result.value)} (#{number_with_delimiter(result.count, delimiter: '.')})",
-            url_for(search_form: {facet.to_sym => result.value}.reverse_merge(params[:search_form])), class: params[:search_form][facet.to_sym].blank? ? "" : "selected"
+          <% if @project.present?
+            url =  redsun_project_search_path(@project, search_form: { class_name: [result.value] }.reverse_merge(params[:search_form]))
+          else
+            url =  url_for(search_form: { class_name: [result.value]}.reverse_merge(params[:search_form]))
+          end %>
+            <%= link_to "#{t('redsun.facets.values.' + result.value.to_s.downcase.tr(" ", "_"), default: result.value)} (#{number_with_delimiter(result.count, delimiter: '.')})",
+           url, class: result.value.in?(params[:search_form][:class_name]) ? 'selected' : ''
             %>
         </li>
       <% end -%>

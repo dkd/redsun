@@ -1,0 +1,11 @@
+<h5><%= t "field_filename" %> #<%= highlighter_for(:id, hit, record) %> in <%= link_to record.try(:project).try(:name), record.try(:project) %> / <%= link_to record.try(:container).try(:class), url_for(record.try(:container)) %></small> | <%= number_to_human_size record.try(:filesize) %></h5>
+<h3><%= link_to highlighter_for(:filename, hit, record), record %></h3>
+<% if record.created_on && record.author %>
+  <h5><%= authoring(record.created_on, record.author)%></h5>
+<% end %>
+<% if record.image? %>
+  <%= image_tag url_for(:controller => 'attachments', action: 'thumbnail', id: record, size: 100, only_path: true) %>
+<% end %>
+<p>
+  <%= sanitize highlighter_for(:description, hit, record), tags: %w(span b strong a), attributes: %w(class id style href target) %>
+</p>

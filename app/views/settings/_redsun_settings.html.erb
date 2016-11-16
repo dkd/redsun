@@ -4,3 +4,9 @@
   </label>
   <%= check_box_tag 'settings[enable_solr_search_field]', 1, @settings["enable_solr_search_field"] %>
 </p>
+<p>
+  <label>
+    <%= l("redsun.settings.enable_select2_plugin") %>
+  </label>
+  <%= check_box_tag 'settings[enable_select2_plugin]', 1, @settings["enable_select2_plugin"] %>
+</p>
