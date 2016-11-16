@@ -90,20 +90,27 @@ class RedsunSearchController < ApplicationController
          priority_id
          tracker_id
          status_id
-         filetype
-         category_id).each do |easy_facet|
-        facet easy_facet, minimum_count: 1
-        if params.key?(:search_form) && params[:search_form][easy_facet].present?
-          with(easy_facet, params[:search_form][easy_facet])
-        end
+         category_id
+         filetype).each do |easy_facet|
+           facet_filter = if params[:search_form].key?(easy_facet)
+             Rails.logger.info "#{easy_facet} is in facet_filter"
+                            with(easy_facet).any_of(params[:search_form][easy_facet])
+                          else
+                            all_of {} # not necessary for searching, but object is needed to set exclude option
+                          end
+        facet easy_facet, minimum_count: 1, exclude: facet_filter
+        #if params.key?(:search_form) && params[:search_form][easy_facet].present?
+        #  with(easy_facet).any_of(params[:search_form][easy_facet])
+        #end
+
       end
 
         # class filter
         class_filter = if params[:search_form].key?(:class_name)
-                                with(:class_name).any_of(params[:search_form][:class_name])
-                             else
-                               all_of {} # not necessary for searching, but object is needed to set exclude option
-                             end
+                         with(:class_name).any_of(params[:search_form][:class_name])
+                       else
+                         all_of {} # not necessary for searching, but object is needed to set exclude option
+                       end
         facet :class_name, minimum_count: 1, exclude: class_filter # exclude option gives access to full list of items
 
       %w(created_on updated_on).each do |date_facet|

@@ -4,9 +4,9 @@ Redmine::Plugin.register :redmine_redsun do
   name 'Redmine Redsun Plugin'
   author 'Kieran Hayes'
   description 'This plugin utilizes the sunspot gem for search'
-  version '2.0.0'
+  version '2.1.0'
   url 'http://www.dkd.de'
-  author_url 'http://www.dkd.de'
+  author_url 'https://www.dkd.de'
   
   settings default: {
     enable_solr_search_field: false,

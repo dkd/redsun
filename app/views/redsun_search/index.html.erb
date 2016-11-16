@@ -138,6 +138,11 @@
     float: right;
     padding-top: 2em;
   }
+   #sidebar .redsun-select2 .select2-choices .select2-search-choice{
+    padding: 3px 5px 3px 18px;
+    margin: 3px 0 3px 5px;
+  }
+  
 </style>
 
 <%= form_for('search_form', url: @redsun_path, html: { id: 'redsun-search-form', method: 'get' }) do |f| %>
@@ -165,7 +170,6 @@
     <%=t('redsun.hints')%>
   </div>
 <% end -%>
-
 <% if @search.results.present? %>
   <%= render 'results' %>
 <% else %>
@@ -192,11 +196,12 @@
       $('#redsun-search-form .select2').select2();
       $('.redsun-select2').select2({
         width: '95%',
-        allowClear: true
+        allowClear: true,
+        maximumSelectionSize: 100
       }).on('select2-selecting', function(e){
-        window.location.href = e.val;
-      }).on('select2-clearing', function(e){
-        window.location.href = $(e.target).data('cleared-url');
+        window.location.href = e.choice.element[0].dataset["facetUrl"];
+      }).on('select2-clearing select2-removed', function(e){
+        window.location.href = e.choice.element[0].dataset["facetUrl"];
       })
     }
   })
