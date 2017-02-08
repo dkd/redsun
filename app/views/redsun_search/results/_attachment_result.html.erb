@@ -4,7 +4,7 @@
   <h5><%= authoring(record.created_on, record.author)%></h5>
 <% end %>
 <% if record.image? %>
-  <%= image_tag url_for(:controller => 'attachments', action: 'thumbnail', id: record, size: 100, only_path: true) %>
+  <%= image_tag url_for(:controller => 'attachments', action: 'thumbnail', id: record, size: 180, only_path: true) %>
 <% end %>
 <p>
   <%= sanitize highlighter_for(:description, hit, record), tags: %w(span b strong a), attributes: %w(class id style href target) %>

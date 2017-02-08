@@ -1,0 +1,23 @@
+<%
+if hit.highlights(:description).empty?
+  title = record.title
+else
+  title = highlighter_for(:title, hit, record)
+end
+%>
+<h5>
+  <%= link_to title, "#{url_for(record)}" %> in <%= link_to record.try(:project).try(:name), record.try(:project) %>
+</h5>
+<% if record.created_on %>
+  <h5>
+    <%= avatar(record.author, :size => '16') %> <%= authoring(record.created_on, record.author )%>
+  </h5>
+<% end %>
+<h3><%= link_to title, url_for(record) %></h3>
+<p>
+  <% if hit.highlights(:description).empty? %>
+    <%= truncate strip_tags(record.description), length: 300 %>xx
+  <% else %>
+    <%= sanitize highlighter_for(:description, hit, record), tags: %w(span b strong a), attributes: %w(class id style href target) %>
+  <% end %>
+</p>

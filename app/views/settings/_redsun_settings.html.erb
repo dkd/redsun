@@ -10,3 +10,10 @@
   </label>
   <%= check_box_tag 'settings[enable_select2_plugin]', 1, @settings["enable_select2_plugin"] %>
 </p>
+<p>
+  <label>
+    <%= l("redsun.settings.solr_url") %>
+  </label>
+  <%= Sunspot.try(:config).try(:solr).try(:url) %>
+</p>
+

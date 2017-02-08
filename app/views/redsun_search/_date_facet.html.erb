@@ -1,7 +1,7 @@
 <% if results.facet(facet).present? && results.facet(facet).rows && results.facet(facet).rows.count > 1 || params[:search_form][facet].present? %>
   <h3><%=t "redsun.facet.#{facet.to_sym}"%></h3>
   <% if search2_enabled? %>
-    <select data-cleared-url="<%=url_for(:search_form => { facet.to_sym => "" }.reverse_merge(params[:search_form]))%>" class="redsun-select2" size="1" data-placeholder="<%=t("redsun.placeholder.#{facet}", default: "Select a value!")%>">
+    <select data-cleared-url="<%=url_for(:search_form => { facet.to_sym => "" }.reverse_merge(params[:search_form]))%>" class="redsun-select2-single" size="1" data-placeholder="<%=t("redsun.placeholder.#{facet}", default: "Select a value!")%>">
       <option></option>
       <% results.facet(facet.to_sym).rows.each do |result| %>
           <option <%=selected_attr_for(facet, result.value) %> value="<%=url_for(:search_form => {facet.to_sym => result.value}.reverse_merge(params[:search_form]))%>">

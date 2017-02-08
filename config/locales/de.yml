@@ -16,6 +16,7 @@ de:
     page_gap: '&hellip;'
     previous_label: "← Vorige"
   redsun:
+    redirect_for_missing_results: "Kein Resultat gefunden. Die Facette %{class_name} wurde deshalb entfernt."
     placeholder:
       project_name: "Wähle ein Projekt"
       author_id: "Wähle einen Autor"
@@ -31,11 +32,13 @@ de:
     settings:
       enable_solr_search_field: "Solr Suche aktivieren"
       enable_select2_plugin: "Select2 Plugin aktivieren"
+      solr_url: "Solr URL"
     spellcheck_question: "Meintest du vielleicht?"
     journal: "Kommentar"
     issue: "Ticket"
     wiki_page: "Wikiseite"
     project: "Projekt"
+    news: "Nachrichten"
     search_button: "Suchen!"
     header: "Solr-Suche"
     searchstring: "Suchbegriffe"
@@ -53,7 +56,7 @@ de:
         wikipage: "Wikiseiten"
         project: "Projekte"
     facet:
-      reset_object_facet: "Alle Objekte anzeigen"
+      reset_object_facet: "Alle Objekte (%{count})"
       remove: "- entfernen"
       created_on: "Erstellungszeitraum"
       updated_on: "Aktualisierungdatum"

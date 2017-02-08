@@ -1,12 +1,15 @@
-<% if results.facet(facet).present? && results.facet(facet).rows && results.facet(facet).rows.count >= 1 %>
-  <div class="tabs">
-    <ul>
-      <li>
-        <%= link_to t("redsun.facet.reset_object_facet"), 
+<div class="tabs redsun-tabs">
+  <ul>
+    <li>
+      <% count_all = @search.facet(:class_name).rows.map(&:count).sum %>
+      <% if count_all > 0 %>
+        <%= link_to t("redsun.facet.reset_object_facet", count: number_with_delimiter(count_all)), 
                     url_for(search_form: {facet.to_sym => ""}.reverse_merge(params[:search_form]) ),
                     class: params[:search_form][facet.to_sym].blank? ? "selected" : "" %>
-      </li>
-      <% results.facet(facet.to_sym).rows.each do |result| %>
+      <% end %>
+    </li>
+    <% results.facet(facet.to_sym).rows.each do |result| %>
+      <% if result.count > 0 || facet.in?(params[:search_form][:class_name]) %>
         <li>
           <% if @project.present?
             url =  redsun_project_search_path(@project, search_form: { class_name: [result.value] }.reverse_merge(params[:search_form]))
@@ -17,8 +20,7 @@
            url, class: result.value.in?(params[:search_form][:class_name]) ? 'selected' : ''
             %>
         </li>
-      <% end -%>
-
-    </ul>
-  </div>
-<% end -%>
+      <% end %>
+    <% end %>
+  </ul>
+</div>

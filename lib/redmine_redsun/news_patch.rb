@@ -1,9 +1,9 @@
-require_dependency 'attachment'
+require_dependency 'news'
 
 # :nodoc:
 module RedmineRedsun
-  # Patches Redmine's attachments dynamically.
-  module AttachmentPatch
+  # Patches Redmine's News dynamically.
+  module NewsPatch
     def self.included(base) # :nodoc:
       base.extend ClassMethods
       base.send(:include, InstanceMethods)
@@ -16,32 +16,20 @@ module RedmineRedsun
           # Class Name
           string :class_name, stored: true
 
-          # Attachment ID
-          integer :id
-          
-          # File Size
-          integer :filesize
+          # Title
+          text :title, stored: true
 
-          # Attachment creator
+          # News ID
+          integer :id
+
+          # Creator
           integer :author_id, references: User
 
-          # Number of downloads
-          integer :downloads
-
-          # File Type
-          string :filetype do
-            File.extname(filename).gsub(/^\.+/, '').try(:downcase)
-          end
-
-          # Filename
-          text :filename, stored: true, boost: 9 do
-            filename.gsub(/[[:cntrl:]]/, ' ').scan(/[[:print:][:space:]]/).join if filename.present?
-          end
-
           # Description
-          string :description, stored: true do
-            description_for_search
-          end
+          text :description, stored: true
+
+          # Summary
+          text :summary, stored: true
 
           # Project ID
           integer :project_id
@@ -79,14 +67,11 @@ module RedmineRedsun
         return false if project.nil?
         project.active?
       end
-      
+
       def description_for_search
         fields = []
+        fields << summary if summary.present?
         fields << description if description.present?
-        if container.is_a? Document
-          fields << container.try(:title)
-          fields << container.try(:description)
-        end
         fields.compact.join(' ')
       end
 

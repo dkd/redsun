@@ -22,7 +22,7 @@ class RedsunSearchController < ApplicationController
       params[:search_form][:project_id] = @project.id
       projects = @project.self_and_descendants.all
       allowed_projects << projects.collect { |p| p.id if User.current.allowed_to?(:view_project, p) }.compact
-      allowed_issues << projects.collect { |project| project .id if User.current.allowed_to?(:view_issues, project) }.compact
+      allowed_issues << projects.collect { |project| project.id if User.current.allowed_to?(:view_issues, project) }.compact
       allowed_wikis << projects.collect { |project| project.id if User.current.allowed_to?(:view_wiki_pages, @project) }.compact
     elsif search_scope == 'my_projects'
       projects = User.current.memberships.collect(&:project).compact.uniq
@@ -41,9 +41,10 @@ class RedsunSearchController < ApplicationController
     allowed_issues = allowed_issues.push(0)
     allowed_wikis = allowed_wikis.push(0)
 
-    @search = Sunspot.search([Project, Issue, WikiPage, Journal, Attachment]) do
+    @search = Sunspot.search([Project, Issue, WikiPage, Journal, Attachment, News]) do
       fulltext searchstring do
         highlight :description
+        highlight :summary
         highlight :comments
         highlight :subject
         highlight :wiki_content
@@ -60,6 +61,7 @@ class RedsunSearchController < ApplicationController
           with(:project_id).any_of allowed_issues.flatten
           with(:is_private, false)
         end
+
         all_of do
           with :class, WikiPage
           with(:project_id).any_of allowed_wikis.flatten
@@ -81,6 +83,11 @@ class RedsunSearchController < ApplicationController
           with :class, Attachment
           with(:project_id).any_of allowed_projects.flatten
         end
+        
+        all_of do
+          with :class, News
+          with(:project_id).any_of allowed_projects.flatten
+        end
 
       end
 
@@ -91,37 +98,29 @@ class RedsunSearchController < ApplicationController
          tracker_id
          status_id
          category_id
-         filetype).each do |easy_facet|
+         filetype
+         class_name).each do |easy_facet|
            facet_filter = if params[:search_form].key?(easy_facet)
-             Rails.logger.info "#{easy_facet} is in facet_filter"
                             with(easy_facet).any_of(params[:search_form][easy_facet])
                           else
                             all_of {} # not necessary for searching, but object is needed to set exclude option
                           end
-        facet easy_facet, minimum_count: 1, exclude: facet_filter
-        #if params.key?(:search_form) && params[:search_form][easy_facet].present?
-        #  with(easy_facet).any_of(params[:search_form][easy_facet])
-        #end
-
+        facet easy_facet, minimum_count: 0, exclude: facet_filter
       end
-
-        # class filter
-        class_filter = if params[:search_form].key?(:class_name)
-                         with(:class_name).any_of(params[:search_form][:class_name])
-                       else
-                         all_of {} # not necessary for searching, but object is needed to set exclude option
-                       end
-        facet :class_name, minimum_count: 1, exclude: class_filter # exclude option gives access to full list of items
-
+      
+      # Class
+      class_facet_filter = if params[:search_form].key?(:class_name)
+                             with(:class_name).any_of(params[:search_form][:class_name])
+                           else
+                             all_of {} # not necessary for searching, but object is needed to set exclude option
+                           end
+      facet :class_name, minimum_count: 0, exclude: class_facet_filter
+      
       %w(created_on updated_on).each do |date_facet|
         if params[:search_form].present? && params[:search_form][date_facet].present?
           date_range = date_conditions.collect { |c| c[:date] if (c[:name].to_s == params[:search_form][date_facet.to_sym]) }.compact.first
           with(date_facet).greater_than(date_range) unless date_range.nil?
         end
-      end
-
-      if params.key?(:search_form) && params[:search_form][:active].present?
-        with(:active, (params[:search_form][:active] == 'true' ? true : false))
       end
 
       # Pagination
@@ -147,9 +146,10 @@ class RedsunSearchController < ApplicationController
 
       order_by(sort_field.to_sym, sort_order.downcase.to_sym)
       order_by(:score, :desc)
-      spellcheck :count => 3
+      spellcheck(count: 3)
     end
     @searchstring = searchstring
+    redirect_if_neccessary
 
   rescue Errno::ECONNREFUSED
     render 'connection_refused'
@@ -161,22 +161,9 @@ class RedsunSearchController < ApplicationController
 
   def set_search_form
     params[:search_form] = {} unless params[:search_form].present?
-    # Reset facets if search button is pressed
-    if params[:commit].present?
-      [:author_id,
-       :status_id,
-       :tracker_id,
-       :priority_id,
-       :created_on,
-       :updated_on,
-       :class_name,
-       :active,
-       :project_name].each do |facet|
-        params[:search_form].delete(facet) if params[:search_form][facet].present?
-      end
-    end
     @scope = params[:search_form][:scope] || 'all_projects'
     params[:search_form][:class_name] ||= []
+    params[:search_form][:class_name] = [] if params[:search_form][:class_name].blank?
     @sort_field = sort_field
     @sort_order = sort_order
     @scope_selector = [[l(:label_my_projects), 'my_projects'], [l(:label_project_all), 'all_projects']]
@@ -195,6 +182,19 @@ class RedsunSearchController < ApplicationController
   end
 
   private
+  
+  def redirect_if_neccessary
+    # No need to redirect
+    return true if @search.total > 0 
+    # Class name was select but no result was found
+    if params[:search_form].key?(:class_name) && params[:search_form][:class_name].any? && @search.facet(:class_name).rows.map(&:count).count > 0
+      flash_message = I18n.translate("redsun.redirect_for_missing_results", 
+                                     class_name: I18n.translate("redsun.#{params[:search_form][:class_name].try(:first).try(:downcase)}") )
+      redirect_to redsun_search_url(search_form: params[:search_form].except(:class_name)), notice: flash_message
+    else
+      true
+    end
+  end
 
   def search_scope
     params[:search_form][:scope] || 'all_projects'
