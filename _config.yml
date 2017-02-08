@@ -1,0 +1,8 @@
+title: Redsun
+description: Red Sun - Apache Solr Search Integration for Redmine based on Sunspot
+google_analytics: 
+show_downloads: true
+theme: jekyll-theme-minimal
+
+gems:
+  - jekyll-mentions
