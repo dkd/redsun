@@ -1,4 +1,6 @@
-<br><%= page_entries_info @search.results, { model: 'record' } %>
+<div class='redsun-pagination-info'>
+  <%= page_entries_info @search.results, { model: 'record' } %>
+</div>
 <div class='redsun-pagination-top redsun-pagination'>
   <%= will_paginate @search.results %>
 </div>
@@ -18,11 +20,10 @@
       </div>
     <% end %>
   </div>
-
 <% end %>
 
 <div class='redsun-pagination-bottom redsun-pagination'>
- <%= will_paginate @search.results %>
+  <%= will_paginate @search.results %>
 </div>
 <% content_for :sidebar do %>
   <%= facet(:project_name, @search, :project_name) %>

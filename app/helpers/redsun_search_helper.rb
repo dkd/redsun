@@ -6,7 +6,7 @@ module RedsunSearchHelper
   
   def selected_attr_for(facet, val)
     if params[:search_form] && params[:search_form][facet.to_sym]
-      "selected" if params[:search_form][facet.to_sym] == val.to_s
+      "selected" if val.to_s.in?(params[:search_form][facet.to_sym]) 
     end
   end
 

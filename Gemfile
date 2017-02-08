@@ -5,6 +5,4 @@ group :development do
   gem 'sunspot_solr', '2.2.0'
 end
 
-group :development do
-  gem 'progress_bar', '~> 1.0.3'
-end
+gem 'progress_bar', '~> 1.0.3'

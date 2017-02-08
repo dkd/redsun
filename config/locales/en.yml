@@ -21,6 +21,8 @@ en:
     settings:
       enable_solr_search_field: "Enable Solr search"
       enable_select2_plugin: "Use Select2 Plugin"
+      solr_url: "Solr URL"
+    redirect_for_missing_results: "No results found, so the facet %{class_name} has been removed."
     spellcheck_question: "Did you mean?"
     inactive: "Inactive"
     records: "Records"
@@ -34,6 +36,7 @@ en:
     attachment: "Files"
     wiki_page: "Wiki Pages"
     project: "Projects"
+    news: "News"
     search_button: "Search!"
     hints: "Use * as wildcard in order to find more results."
     placeholder:
@@ -56,7 +59,7 @@ en:
         "false": "No"
         "true": "Yes"
     facet:
-      reset_object_facet: "Show all objects"
+      reset_object_facet: "All objects (%{count})"
       remove: "- remove"
       created_on: "Created On"
       author_id: "Author"

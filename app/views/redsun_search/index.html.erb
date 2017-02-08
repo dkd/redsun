@@ -13,6 +13,7 @@
     display: block;
     border-radius: 3px;
     position: relative;
+    margin-top: 0.5em;
   }
   #redsun-search-form .redsun-search-button {
     padding: 6px;
@@ -28,7 +29,7 @@
   }
   .redsun-logo {
     width: 100px;
-    float: right; // increase responsiveness, not pretty but at least the search button can be click
+    float: right;
   }
   .redsun-pagination-top {
     text-align:center; 
@@ -138,47 +139,116 @@
     float: right;
     padding-top: 2em;
   }
+   #sidebar .redsun-select2 .select2-choices .select2-search-choice{
+    padding: 3px 5px 3px 18px;
+    margin: 3px 0 3px 5px;
+  }
+  
+  #sidebar h3.redsun-sidebar {
+    margin-bottom: 3px;
+  }
+  .redsun-select2,
+  .redsun-select2-single {
+    display: none;
+  }
+  
+  .redsun-pagination-info {
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+    text-align: center;
+  }
+  #content .redsun-tabs {
+    margin-bottom: 0;
+  }
+  @media all and (max-width: 599px) {
+    #content .redsun-tabs {
+      position: static;
+      height: auto !important;
+    }
+    #content .redsun-tabs ul {
+      position: static;
+      width: 100%;
+    }
+    #content .redsun-tabs ul li {
+      position: static;
+      float: none;
+    }
+    #content .redsun-tabs ul li a{
+      border-top-left-radius: 0px;
+      border-top-right-radius: 0px;
+    }
+    #content .redsun-tabs ul li:first-child a {
+      border-top-left-radius: 3px;
+      border-top-right-radius: 3px;
+    }
+    .redsun_label_order {
+      display: block;
+      margin-top: 0.5em;
+    }
+    #redsun-search-form #search_form_searchstring {
+      width: 100%
+    }
+    .redsun-logo {
+      width: 50px;
+      margin-top: 1em;
+    }
+    #search_form_searchstring {
+      margin-bottom: 0.5em;
+    }
+    .redsun-pagination-top {
+      margin-bottom: 1em;
+    }
+  }
+
 </style>
 
 <%= form_for('search_form', url: @redsun_path, html: { id: 'redsun-search-form', method: 'get' }) do |f| %>
   <%= f.text_field(:searchstring, value: @searchstring, class: 'toggle', placeholder: t('redsun.searchstring')) %>
   <%= f.select :scope, @scope_selector, { selected: @scope }, { class: 'select2' }  %>
-  <%= f.label t("redsun.order") %>
+  <%= f.label t("redsun.order"), class: 'redsun_label_order' %>
   <%= f.select :sort_field, Issue::SORT_FIELDS.collect { |o| [t("field_#{o}"), o]}, { selected: @sort_field }, { class: 'select2' } %>
   <%= f.select :sort_order, Issue::SORT_ORDER.collect { |o| [t(o[1]), o.first]}, { selected: @sort_order }, { class: 'select2' }  %>
-
+  <% %w(assigned_to_id
+        author_id
+        category_id
+        filetype
+        priority_id
+        project_name
+        status_id
+        tracker_id
+        class_name
+     ).each do |facet|
+    if params[:search_form][facet].present?
+      if params[:search_form][facet].is_a?(Array) %>
+        <% params[:search_form][facet].each do |facet_value| %>
+          <%= hidden_field_tag("search_form[#{facet}][]", facet_value) %>
+        <% end %>
+      <% else %>
+        <%= hidden_field_tag("search_form[#{facet}][]", params[:search_form][facet]) %>
+      <% end %>
+    <% end %>
+  <% end %>
   <%= f.submit t('redsun.search_button'), class: 'redsun-search-button' %>
   <%= link_to t('redsun.reset'), url_for(controller: 'redsun_search', action: :index, project_id: params[:project_id]) %>
-  <%= f.hidden_field(:author_id, value: params[:search_form][:author_id]) if params[:search_form][:author_id].present? %>
-  <%= f.hidden_field(:status_id, value: params[:search_form][:status_id]) if params[:search_form][:status_id].present? %>
-  <%= f.hidden_field(:tracker_id, value: params[:search_form][:tracker_id]) if params[:search_form][:tracker_id].present? %>
-  <%= f.hidden_field(:priority_id, value: params[:search_form][:priority_id]) if params[:search_form][:priority_id].present? %>
   <%= f.hidden_field(:created_on, value: params[:search_form][:created_on]) if params[:search_form][:created_on].present? %>
   <%= f.hidden_field(:updated_on, value: params[:search_form][:updated_on]) if params[:search_form][:updated_on].present? %>
-  <%= hidden_field_tag('search_form[class_name][]', params[:search_form][:class_name]) if params[:search_form][:class_name].present? %>
-  <%= f.hidden_field(:filetype, value: params[:search_form][:filetype]) if params[:search_form][:filetype].present? %>
-  <%= f.hidden_field(:active, value: params[:search_form][:active]) if params[:search_form][:active].present? %>
-  <%= f.hidden_field(:project_name, value: params[:search_form][:project_name]) if params[:search_form][:project_name].present? %>
-  <%= f.hidden_field(:project_id, value: @project.id) if @project %>
   <%= image_tag 'RedSun_Logo_red_on_white.svg', plugin: 'redmine_redsun', class: 'redsun-logo' %>
   <div class='redsun-hints'>
     <%=t('redsun.hints')%>
   </div>
-<% end -%>
+<% end %>
 
 <% if @search.results.present? %>
   <%= render 'results' %>
 <% else %>
-  <p>
-    <%= t "redsun.no_results" %>
-  </p>
+  <%= render 'results' %>
   <% if @search.spellcheck_suggestions.present? && @search.spellcheck_suggestions.try(:first).try(:last) %>
-  <p>
-    <strong><%= t('redsun.spellcheck_question') %></strong>
-    <% @search.spellcheck_suggestions.first.last["suggestion"].each do |suggestion| %>
-      <%= link_to suggestion["word"], url_for(search_form: { searchstring: suggestion["word"] }.reverse_merge(params[:search_form])) %>
-    <% end %>
-  </p>
+    <p>
+      <strong><%= t('redsun.spellcheck_question') %></strong>
+      <% @search.spellcheck_suggestions.first.last["suggestion"].each do |suggestion| %>
+        <%= link_to suggestion["word"], url_for(search_form: { searchstring: suggestion["word"] }.reverse_merge(params[:search_form])) %>
+      <% end %>
+    </p>
   <% end %>
 <% end %>
 
@@ -190,14 +260,32 @@
     });
     if ($.fn.select2 != undefined) {
       $('#redsun-search-form .select2').select2();
-      $('.redsun-select2').select2({
+
+      // One value facets
+      $('.redsun-select2-single').select2({
         width: '95%',
         allowClear: true
       }).on('select2-selecting', function(e){
+        $(this).prevAll("h3:first").append("&nbsp;<img src='images/loading.gif'>")
         window.location.href = e.val;
       }).on('select2-clearing', function(e){
+        $(this).prevAll("h3:first").append("&nbsp;<img src='images/loading.gif'>")
         window.location.href = $(e.target).data('cleared-url');
       })
+
+      $('.redsun-select2').select2({
+        width: '95%',
+        allowClear: true,
+        maximumSelectionSize: 100
+      }).on('select2-selecting', function(e){
+        $(this).prev("h3.redsun-sidebar").css("color", "red")
+        $(this).prevAll("h3:first").append("&nbsp;<img src='images/loading.gif'>")
+        window.location.href = e.choice.element[0].dataset["facetUrl"];
+      }).on('select2-clearing select2-removed', function(e){
+        $(this).prevAll("h3:first").append("&nbsp;<img src='images/loading.gif'>")
+        window.location.href = e.choice.element[0].dataset["facetUrl"];
+      });
+      $('div.redsun-select2-single,div.redsun-select2').fadeIn('fast');
     }
   })
 </script>

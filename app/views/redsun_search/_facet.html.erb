@@ -1,42 +1,51 @@
-<% if results.facet(facet).present? && results.facet(facet).rows && results.facet(facet).rows.count > 1 || params[:search_form][facet].present? %>
-  <h3><%= t("redsun.facet.#{facet}")%></h3>
-<% if search2_enabled? %>
-  <select data-cleared-url="<%=url_for(:search_form => { facet => "" }.reverse_merge(params[:search_form]))%>" class="redsun-select2" size="1" data-placeholder="<%=t("redsun.placeholder.#{facet}", default: "Select a value!")%>">
-    <option></option>
-    <% results.facet(facet).rows.each do |result| %>
-      <% if (attribute.present? && result.instance.present?) %>
-        <% val = result.instance.send(attribute.to_sym) %>
-        <option <%=selected_attr_for(facet, result.value) %> value="<%=url_for(:search_form => {facet => result.value}.reverse_merge(params[:search_form]))%>">
-          <%= (val.present? ? val : "unknown" ) + " (#{number_with_delimiter(result.count, delimiter: '.')})" %>
-        </option>
-      <% else %>
-        <option <%=selected_attr_for(facet, result.value) %> value="<%=url_for(:search_form => {facet => result.value}.reverse_merge(params[:search_form]))%>">
-          <%= "#{result.value} (#{number_with_delimiter(result.count, delimiter: '.')})" %>
-        </option>
-      <% end %>
-    <% end %>
-  </select>
-  <% else %>
-    <ul class="facets">
-    <% results.facet(facet).rows.each do |result| %>
-      <li>
-        <% if (attribute.present? && result.instance.present?) %>
-            <% label = result.instance.send(attribute.to_sym) %>
-            <%= link_to((label.present? ? label : "unknown" ) + " (#{result.count})",
-            url_for(:search_form => {facet => result.value}.reverse_merge(params[:search_form])))
-            %>
+<% if results.facet(facet).present? &&
+      results.facet(facet).rows &&
+      results.facet(facet).rows.count > 1 &&
+      results.facet(facet).rows.sum(&:count) > 0 || params[:search_form][facet].present? %>
 
-        <% else %>
-          <%= link_to "#{result.value} (#{result.count})",
-          url_for(:search_form => {facet => result.value}.reverse_merge(params[:search_form]))
-          %>
+  <h3 class='redsun-sidebar'><%= t("redsun.facet.#{facet}")%></h3>
+  <% params[:search_form][facet] ||= [] %>
+ 
+  <% if search2_enabled? %>
+    <select multiple size="5" class="redsun-select2" data-placeholder="<%=t("redsun.placeholder.#{facet}", default: "Select a value!")%>">
+      <option></option>
+      <% results.facet(facet).rows.each do |result| %>
+        <% if result.count > 0 %>
+          <% if (attribute.present? && result.instance.present?)
+            val = result.instance.send(attribute.to_sym)
+            label = (val.present? ? val : "unknown" ) + " (#{number_with_delimiter(result.count, delimiter: '.')})"
+          else
+            label = "#{result.value} (#{number_with_delimiter(result.count, delimiter: '.')})"
+          end %>
+          <% if result.value.to_s.in?(params[:search_form][facet]) %>
+            <option value='<%= result.value%>' data-facet-url='<%= url_for(search_form: { facet => (params[:search_form][facet] - [result.value.to_s])}.reverse_merge(params[:search_form])) %>' selected><%= label %></option>
+          <% else %>
+            <option data-facet-url='<%= url_for(search_form: { facet => (params[:search_form][facet] + [result.value])}.reverse_merge(params[:search_form])) %>' value='<%= result.value.to_s %>'><%= label %></option>
+           <% end %>
         <% end %>
-    
-        <%= link_to t("redsun.facet.remove"),
-        url_for(:search_form => { facet => "" }.reverse_merge(params[:search_form])),
-        :class => "remove" if params[:search_form][facet].present? %>
-      </li>
-      <% end -%>
-    </ul>
-  <% end %>
-<% end -%>
+      <% end %>
+    </select>
+    <% else %>
+      <ul class="facets">
+        <% results.facet(facet).rows.each do |result| %>
+          <% if result.count > 0 %>
+            <li>
+              <% if (attribute.present? && result.instance.present?) %>
+                <% label = result.instance.send(attribute.to_sym) %>
+                <%= link_to((label.present? ? label : "unknown" ) + " (#{result.count})",
+                    url_for(:search_form => { facet => (params[:search_form][facet] + [result.value]) }.reverse_merge(params[:search_form]))) %>
+              <% else %>
+                <%= link_to "#{result.value} (#{result.count})",
+                    url_for(:search_form => { facet => (params[:search_form][facet] + [result.value]) }.reverse_merge(params[:search_form]))%>
+              <% end %>
+              <% if params[:search_form][facet].present? && result.value.to_s.in?(params[:search_form][facet]) %>
+                <%= link_to t("redsun.facet.remove"),
+                            url_for(search_form: { facet.to_sym => (params[:search_form][facet] - [result.value.to_s]) }.reverse_merge(params[:search_form]) ),
+                            class: "remove"  %>
+              <% end %>
+            </li>
+          <% end %>
+        <% end %>
+      </ul>
+    <% end %>
+<% end %>
