@@ -20,6 +20,7 @@ The following models are being indexed. We plan to add more models with future r
 * Projects
 * WikiPages
 * Attachments
+* News
 
 #### Facets
 
