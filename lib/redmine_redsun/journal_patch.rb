@@ -61,7 +61,9 @@ module RedmineRedsun
     module InstanceMethods
 
       def indice_for_sunspot
-        journalized.journals.map(&:id).index(self.id)+1 if journalized.try(:journals)
+        if journalized.try(:journals) && journalized.journals.any?
+          journalized.journals.map(&:id).index(self.id)+1
+        end
       end
 
       def class_name

@@ -5,12 +5,13 @@ class RedsunSearchController < ApplicationController
   before_action :find_optional_project
   before_action :set_search_form
 
+
   def index
     searchstring = params[:search_form][:searchstring] || ''
 
     # Redirect to Issue if ticket ID is entered
-    if searchstring.match(/^#?(\d+)$/) && Issue.visible.find_by_id($1.to_i)
-      redirect_to controller: 'issues', action: 'show', id: $1
+    if searchstring.match(/^\s*[#]?(\d+).*$/) && Issue.visible.find_by_id($1.to_i)
+      redirect_to controller: 'issues', action: 'show', id: $1.to_i
       return
     end
 
