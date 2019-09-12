@@ -63,3 +63,11 @@ Also: For the spellchecker feature to work properly the Solr index has to be opt
 * bundle exec rake sunspot:solr:reindex
 * restart Redmine
 * enable Redsun within the plugin's settings section
+
+#### 
+
+Looking for your Red Sun Redmine Search?
+
+Hosted Solr does not require lengthy and complicated configuration. Simply register for an account and create an Apache Solr index. You can then benefit from the advantages of Apache Solr with a few clicks. It offers support for Red Sun via its sunspot integration.
+
+https://www.hosted-solr.com/?locale=en
