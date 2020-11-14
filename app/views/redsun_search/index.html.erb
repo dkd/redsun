@@ -218,20 +218,20 @@
         tracker_id
         class_name
      ).each do |facet|
-    if params[:search_form][facet].present?
-      if params[:search_form][facet].is_a?(Array) %>
-        <% params[:search_form][facet].each do |facet_value| %>
+    if @search_params[facet].present?
+      if @search_params[facet].is_a?(Array) %>
+        <% @search_params[facet].each do |facet_value| %>
           <%= hidden_field_tag("search_form[#{facet}][]", facet_value) %>
         <% end %>
       <% else %>
-        <%= hidden_field_tag("search_form[#{facet}][]", params[:search_form][facet]) %>
+        <%= hidden_field_tag("search_form[#{facet}][]", @search_params[facet]) %>
       <% end %>
     <% end %>
   <% end %>
   <%= f.submit t('redsun.search_button'), class: 'redsun-search-button' %>
   <%= link_to t('redsun.reset'), url_for(controller: 'redsun_search', action: :index, project_id: params[:project_id]) %>
-  <%= f.hidden_field(:created_on, value: params[:search_form][:created_on]) if params[:search_form][:created_on].present? %>
-  <%= f.hidden_field(:updated_on, value: params[:search_form][:updated_on]) if params[:search_form][:updated_on].present? %>
+  <%= f.hidden_field(:created_on, value: @search_params[:created_on]) if @search_params[:created_on].present? %>
+  <%= f.hidden_field(:updated_on, value: @search_params[:updated_on]) if @search_params[:updated_on].present? %>
   <%= image_tag 'RedSun_Logo_red_on_white.svg', plugin: 'redmine_redsun', class: 'redsun-logo' %>
   <div class='redsun-hints'>
     <%=t('redsun.hints')%>
@@ -246,7 +246,7 @@
     <p>
       <strong><%= t('redsun.spellcheck_question') %></strong>
       <% @search.spellcheck_suggestions.first.last["suggestion"].each do |suggestion| %>
-        <%= link_to suggestion["word"], url_for(search_form: { searchstring: suggestion["word"] }.reverse_merge(params[:search_form])) %>
+        <%= link_to suggestion["word"], url_for(search_form: { searchstring: suggestion["word"] }.reverse_merge(@search_params)) %>
       <% end %>
     </p>
   <% end %>

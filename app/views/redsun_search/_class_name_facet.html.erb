@@ -4,20 +4,20 @@
       <% count_all = @search.facet(:class_name).rows.map(&:count).sum %>
       <% if count_all > 0 %>
         <%= link_to t("redsun.facet.reset_object_facet", count: number_with_delimiter(count_all)), 
-                    url_for(search_form: {facet.to_sym => ""}.reverse_merge(params[:search_form]) ),
-                    class: params[:search_form][facet.to_sym].blank? ? "selected" : "" %>
+                    url_for(search_form: {:class_name => ""}.reverse_merge(@search_params) ),
+                    class: @search_params[:class_name].blank? ? "selected" : "" %>
       <% end %>
     </li>
-    <% results.facet(facet.to_sym).rows.each do |result| %>
-      <% if result.count > 0 || facet.in?(params[:search_form][:class_name]) %>
+    <% results.facet(:class_name).rows.each do |result| %>
+      <% if result.count > 0 || facet.in?(@search_params[:class_name]) %>
         <li>
           <% if @project.present?
-            url =  redsun_project_search_path(@project, search_form: { class_name: [result.value] }.reverse_merge(params[:search_form]))
+            url =  redsun_project_search_path(@project, search_form: { class_name: [result.value] }.reverse_merge(@search_params))
           else
-            url =  url_for(search_form: { class_name: [result.value]}.reverse_merge(params[:search_form]))
+            url =  url_for(search_form: { class_name: [result.value]}.reverse_merge(@search_params))
           end %>
             <%= link_to "#{t('redsun.facets.values.' + result.value.to_s.downcase.tr(" ", "_"), default: result.value)} (#{number_with_delimiter(result.count, delimiter: '.')})",
-           url, class: result.value.in?(params[:search_form][:class_name]) ? 'selected' : ''
+           url, class: result.value.in?(@search_params[:class_name]) ? 'selected' : ''
             %>
         </li>
       <% end %>
