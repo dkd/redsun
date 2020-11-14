@@ -31,12 +31,12 @@ module RedmineRedsun
           boolean :is_private, stored: true
 
           # Subject
-          text :subject, stored: true, boost: 9 do
+          text :subject, stored: true do
             subject.gsub(/[[:cntrl:]]/, ' ').scan(/[[:print:][:space:]]/).join if subject.present?
           end
 
           # Description
-          text :description, stored: true, boost: 7 do
+          text :description, stored: true do
             description.gsub(/[[:cntrl:]]/, ' ').scan(/[[:print:][:space:]]/).join if description.present?
           end
 
@@ -44,7 +44,7 @@ module RedmineRedsun
           integer :project_id
 
           # Journals entries, i.e. status updates, comments, etc.
-          text :comments, stored: true, boost: 9 do
+          text :comments, stored: true do
             journals.where("journals.notes != ''").map { |j| j.notes.gsub(/[[:cntrl:]]/, ' ').scan(/[[:print:][:space:]]/).join if j.notes.present? }.join(' ')
           end
 
