@@ -52,6 +52,8 @@ module RedmineRedsun
           # Name of Project
           string :project_name, stored: true
 
+          # Content
+          attachment :diskfile
         end
       end
     end
