@@ -7,7 +7,7 @@ class RedsunSearchController < ApplicationController
 
 
   def index
-    searchstring = params[:search_form][:searchstring] || ''
+    searchstring = @search_params[:searchstring] || ''
 
     # Redirect to Issue if ticket ID is entered
     if searchstring.match(/^\s*[#]?(\d+).*$/) && Issue.visible.find_by_id($1.to_i)
@@ -20,7 +20,7 @@ class RedsunSearchController < ApplicationController
     allowed_wikis = []
 
     if @project && search_scope == 'project'
-      params[:search_form][:project_id] = @project.id
+      @search_params[:project_id] = @project.id
       projects = @project.self_and_descendants.all
       allowed_projects << projects.collect { |p| p.id if User.current.allowed_to?(:view_project, p) }.compact
       allowed_issues << projects.collect { |project| project.id if User.current.allowed_to?(:view_issues, project) }.compact
@@ -162,9 +162,27 @@ class RedsunSearchController < ApplicationController
 
   def set_search_form
     params[:search_form] = {} unless params[:search_form].present?
-    @scope = params[:search_form][:scope] || 'all_projects'
-    params[:search_form][:class_name] ||= []
-    params[:search_form][:class_name] = [] if params[:search_form][:class_name].blank?
+    @search_params = params[:search_form].permit(
+      :created_on,
+      :scope,
+      :searchstring,
+      :sort_field,
+      :sort_order,
+      :updated_on,
+      :assigned_to_id => [],
+      :author_id => [],
+      :category_id => [],
+      :class_name => [],
+      :filetype => [],
+      :priority_id => [],
+      :project_id => [],
+      :project_name => [],
+      :status_id => [],
+      :tracker_id => [],
+    )
+    @scope = @search_params[:scope] || 'all_projects'
+    @search_params[:class_name] ||= []
+    @search_params[:class_name] = [] if @search_params[:class_name].blank?
     @sort_field = sort_field
     @sort_order = sort_order
     @scope_selector = [[l(:label_my_projects), 'my_projects'], [l(:label_project_all), 'all_projects']]
@@ -188,26 +206,26 @@ class RedsunSearchController < ApplicationController
     # No need to redirect
     return true if @search.total > 0 
     # Class name was select but no result was found
-    if params[:search_form].key?(:class_name) && params[:search_form][:class_name].any? && @search.facet(:class_name).rows.map(&:count).count > 0
+    if @search_params.key?(:class_name) && @search_params[:class_name].any? && @search.facet(:class_name).rows.map(&:count).count > 0
       flash_message = I18n.translate("redsun.redirect_for_missing_results", 
-                                     class_name: I18n.translate("redsun.#{params[:search_form][:class_name].try(:first).try(:downcase)}") )
-      redirect_to redsun_search_url(search_form: params[:search_form].except(:class_name)), notice: flash_message
+                                     class_name: I18n.translate("redsun.#{@search_params[:class_name].try(:first).try(:downcase)}") )
+      redirect_to redsun_search_url(search_form: @search_params.except(:class_name)), notice: flash_message
     else
       true
     end
   end
 
   def search_scope
-    params[:search_form][:scope] || 'all_projects'
+    @search_params[:scope] || 'all_projects'
   end
 
   def sort_order
-    return params[:search_form][:sort_order] if Issue::SORT_ORDER.collect(&:first).include?(params[:search_form][:sort_order])
+    return @search_params[:sort_order] if Issue::SORT_ORDER.collect(&:first).include?(@search_params[:sort_order])
     'DESC'
   end
   
   def sort_field
-    return params[:search_form][:sort_field] if Issue::SORT_FIELDS.include?(params[:search_form][:sort_field])
+    return @search_params[:sort_field] if Issue::SORT_FIELDS.include?(@search_params[:sort_field])
     'score'
   end
 

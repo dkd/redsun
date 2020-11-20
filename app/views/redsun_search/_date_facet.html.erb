@@ -1,10 +1,10 @@
-<% if results.facet(facet).present? && results.facet(facet).rows && results.facet(facet).rows.count > 1 || params[:search_form][facet].present? %>
+<% if results.facet(facet).present? && results.facet(facet).rows && results.facet(facet).rows.count > 1 || @search_params[facet].present? %>
   <h3><%=t "redsun.facet.#{facet.to_sym}"%></h3>
   <% if search2_enabled? %>
-    <select data-cleared-url="<%=url_for(:search_form => { facet.to_sym => "" }.reverse_merge(params[:search_form]))%>" class="redsun-select2-single" size="1" data-placeholder="<%=t("redsun.placeholder.#{facet}", default: "Select a value!")%>">
+    <select data-cleared-url="<%=url_for(:search_form => { facet.to_sym => "" }.reverse_merge(@search_params))%>" class="redsun-select2-single" size="1" data-placeholder="<%=t("redsun.placeholder.#{facet}", default: "Select a value!")%>">
       <option></option>
       <% results.facet(facet.to_sym).rows.each do |result| %>
-          <option <%=selected_attr_for(facet, result.value) %> value="<%=url_for(:search_form => {facet.to_sym => result.value}.reverse_merge(params[:search_form]))%>">
+          <option <%=selected_attr_for(facet, result.value) %> value="<%=url_for(:search_form => {facet.to_sym => result.value}.reverse_merge(@search_params))%>">
             <% label = t("redsun.facet.date_range_rows.#{result.value}") %>
             <%= (label.present? ? label : "unknown" ) + " (#{result.count})"%>
           </option>
@@ -19,15 +19,15 @@
         </style>
       <ul class="facets">
         <% results.facet(facet.to_sym).rows.each do |result| %>
-          <% if params[:search_form][facet].blank? || params[:search_form].present? && params[:search_form][facet].present? && params[:search_form][facet] == result.value  %>
+          <% if @search_params[facet].blank? || @search_params.present? && @search_params[facet].present? && @search_params[facet] == result.value  %>
             <li>
               <% label = t("redsun.facet.date_range_rows.#{result.value}") %>
               <%= link_to((label.present? ? label : "unknown" ) + " (#{result.count})",
-              url_for(:controller => "redsun_search", :action => :index, :search_form => {facet.to_sym => result.value}.reverse_merge(params[:search_form])))
+              url_for(:controller => "redsun_search", :action => :index, :search_form => {facet.to_sym => result.value}.reverse_merge(@search_params)))
               %>
               <%= link_to t("facet.remove"),
-              url_for(:controller => "redsun_search", :action => :index, :search_form => { facet.to_sym => "" }.reverse_merge(params[:search_form])),
-              :class => "remove" if params[:search_form][facet].present?  %>
+              url_for(:controller => "redsun_search", :action => :index, :search_form => { facet.to_sym => "" }.reverse_merge(@search_params)),
+              :class => "remove" if @search_params[facet].present?  %>
             </li>
           <% end %>
       <% end -%>
