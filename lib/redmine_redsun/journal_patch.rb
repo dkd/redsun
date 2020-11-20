@@ -28,7 +28,7 @@ module RedmineRedsun
           end
 
           # Notes
-          text :notes, stored: true, boost: 9 do
+          text :notes, stored: true do
             notes.gsub(/[[:cntrl:]]/, ' ').scan(/[[:print:][:space:]]/).join if notes.present?
           end
 

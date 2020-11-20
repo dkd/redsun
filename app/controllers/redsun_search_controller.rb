@@ -54,6 +54,16 @@ class RedsunSearchController < ApplicationController
         highlight :id
         highlight :title
         highlight :filename
+        boost_fields(
+          :filename => 9,
+          :subject => 9,
+          :description => 7,
+          :comments => 9,
+          :notes => 9,
+          :project_name => 10,
+          :title => 10,
+          :wiki_content => 8,
+        )
       end
 
       any_of do

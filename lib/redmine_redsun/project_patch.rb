@@ -37,7 +37,7 @@ module RedmineRedsun
           end
 
           # Name of Project
-          text :project_name, stored: true, boost: 10 do
+          text :project_name, stored: true do
             name.gsub(/[[:cntrl:]]/, ' ').scan(/[[:print:][:space:]]/).join if name.present?
           end
         end

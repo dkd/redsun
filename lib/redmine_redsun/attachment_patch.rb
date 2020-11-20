@@ -34,7 +34,7 @@ module RedmineRedsun
           end
 
           # Filename
-          text :filename, stored: true, boost: 9 do
+          text :filename, stored: true do
             filename.gsub(/[[:cntrl:]]/, ' ').scan(/[[:print:][:space:]]/).join if filename.present?
           end
 

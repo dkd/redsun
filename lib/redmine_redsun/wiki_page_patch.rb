@@ -27,12 +27,12 @@ module RedmineRedsun
           end
 
           # Page Title
-          text :title, stored: true, boost: 10 do
+          text :title, stored: true do
             title.gsub(/[[:cntrl:]]/, ' ').gsub(/_/, ' ').scan(/[[:print:][:space:]]/).join
           end
 
           # Content of Page
-          text :wiki_content, stored: true, boost: 8 do
+          text :wiki_content, stored: true do
             content.text.gsub(/[[:cntrl:]]/, ' ').scan(/[[:print:][:space:]]/).join unless content.nil?
           end
 
