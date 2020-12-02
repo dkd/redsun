@@ -1,4 +1,5 @@
 gem 'sunspot_rails', '2.5.0'
+gem 'sunspot_cell', :git => "https://github.com/waterfield/sunspot_cell.git", :branch => "2.3.0"
 gem 'will_paginate', '~> 3.1.3'
 
 group :development do
