@@ -1,5 +1,5 @@
 gem 'sunspot_rails', '2.2.6'
-gem 'will_paginate', '~> 3.1.3'
+gem 'will_paginate', '~> 3.3.1'
 
 group :development do
   gem 'sunspot_solr', '2.2.0'
