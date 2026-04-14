@@ -1,15 +1,10 @@
-<% title = record.journalized_type == 'Issue' ? " #{record.journalized.subject}" : ' ' %>
-<h5>
-  <%= link_to "#{t('redsun.journal')} ##{issue_coment_number(record.id).to_s}", issue_comment_path(record.id) %>
-  in
-  <%= link_to ("#{t("field_#{record.journalized_type.downcase}")} ##{record.journalized.id}#{title}"), "#{url_for(record.journalized)}" %> in <%= link_to record.try(:project).try(:name), record.try(:project) %>
-  </small>
-</h5>
-<% if record.created_on %>
-  <h5>
-    <%= avatar(record.user, :size => '16') %> <%= authoring(record.created_on, record.user )%>
-  </h5>
-<% end %>
+<% title = record.journalized_type == 'Issue' ? "in #{t('label_issue')} ##{record.journalized.id} #{record.journalized.subject}" : ' ' %>
+<h3>
+  <%= link_to issue_comment_path(record.id) do %>
+    <%= "#{t('label_comment')} ##{issue_comment_number(record.id).to_s}" %> <%=title %>
+  <% end %>
+  <span class="redsun-subheader"><%= link_to_user(record.user) %></span>
+</h3>
 <p>
   <% if hit.highlights(:notes).empty? %>
     <%= truncate strip_tags(record.notes), length: 100 %>
@@ -17,3 +12,10 @@
     <%= sanitize highlighter_for(:notes, hit, record), tags: %w(span b strong a), attributes: %w(class id style href target) %>
   <% end %>
 </p>
+<h5>
+  <%= redsun_inactive_badge(record) %>
+  <%= l("redsun.label_added_time_by", age: time_tag(record.created_on)).html_safe %>
+  <% if record.updated_on && record.updated_on > record.created_on %>
+    | <%= l(:label_updated_time, time_tag(record.updated_on)).html_safe %>
+  <% end %>
+</h5>

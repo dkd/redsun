@@ -1,11 +1,24 @@
-<h5><%= t "field_filename" %> #<%= highlighter_for(:id, hit, record) %> in <%= link_to record.try(:project).try(:name), record.try(:project) %> / <%= link_to record.try(:container).try(:class), url_for(record.try(:container)) %></small> | <%= number_to_human_size record.try(:filesize) %></h5>
-<h3><%= link_to highlighter_for(:filename, hit, record), record %></h3>
-<% if record.created_on && record.author %>
-  <h5><%= authoring(record.created_on, record.author)%></h5>
-<% end %>
-<% if record.image? %>
-  <%= image_tag url_for(:controller => 'attachments', action: 'thumbnail', id: record, size: 180, only_path: true) %>
-<% end %>
+<h3>
+  <%= link_to record do %>
+    <%= "#{t('label_attachment')}: " unless short_search_result_title?(record)%><%= highlighter_for(:filename, hit, record) %>
+  <% end %>
+  <span class="redsun-subheader">
+    In <%= link_to record.try(:project).try(:name), record.try(:project) %>
+  </span>
+</h3>
+
 <p>
+  <% if record.image? %>
+    <%= image_tag url_for(:controller => 'attachments', action: 'thumbnail', id: record, size: 100, only_path: true) %>
+  <% end %>
   <%= sanitize highlighter_for(:description, hit, record), tags: %w(span b strong a), attributes: %w(class id style href target) %>
 </p>
+<h5>
+  <%= redsun_inactive_badge(record) %>
+  <%= record.author.present? ? link_to_user(record.author) : "anonym" %>
+  | <%= l("redsun.label_added_time_by", age: time_tag(record.created_on)).html_safe %>
+  | <%= number_to_human_size record.try(:filesize) %>
+  | <%= link_to url_for(record.try(:container)) do %>
+      <%= t("label_#{record.try(:container).class.to_s.downcase}") %><%= "##{record.try(:container).try(:id)}" %>
+    <% end %>
+</h5>

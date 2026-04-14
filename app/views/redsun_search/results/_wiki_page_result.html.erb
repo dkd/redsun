@@ -1,14 +1,23 @@
-<h5><%= t "label_wiki_page" %> in <%= link_to record.try(:project).try(:name), record.try(:project) %></h5>
-<h3><%= link_to highlighter_for(:title, hit, record).html_safe, record %></h3>
-<% if record.content.updated_on && record.content.author %>
-<h5>
-  <%= avatar(record.content.author, :size => "16") %> <%= authoring(record.content.updated_on, record.content.author, label: :label_updated_time_by)%>
-</h5>
-<% end %>
+<h3>
+  <%= link_to record do %>
+    <%= "#{t('label_wiki')}: " unless short_search_result_title?(record) %>
+    <%= "#{highlighter_for(:title, hit, record)}".html_safe %>
+  <% end %>
+  <span class="redsun-subheader">In <%= link_to record.try(:project).try(:name), record.try(:project) %></span>
+</h3>
+
 <p>
   <% if hit.highlights(:wiki_content).present? %>
     <%= highlighter_for(:wiki_content, hit, record) %>
   <% else %>
-    <%=  strip_tags(truncate(record.content.text, length: 500)) %>
+    <%= strip_tags(truncate(record.content.text, length: 500)) %>
   <% end %>
 </p>
+<h5>
+  <% if record.content.updated_on && record.content.author %>
+    <%= redsun_inactive_badge(record) %>
+    <%=link_to_user(record.content.author)%>
+    | <%= l("redsun.label_added_time_by", age: time_tag(record.created_on)).html_safe %>
+    | <%= l(:label_updated_time, time_tag(record.content.updated_on)).html_safe %>
+  <% end %>
+</h5>

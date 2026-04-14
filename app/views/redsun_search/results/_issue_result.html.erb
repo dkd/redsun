@@ -1,16 +1,37 @@
-<h5><%= t 'field_issue' %> #<%= highlighter_for(:id, hit, record) %> in <%= link_to record.try(:project).try(:name), record.try(:project) %></small></h5>
 <h3>
-  <%= link_to highlighter_for(:subject, hit, record), record %>
-  <small>
-    (<%= t('field_status') %>: <%= record.status %>)
-  </small>
+  <% if short_search_result_title?(record) %>
+      <%= link_to highlighter_for(:subject, hit, record), record %>
+      <span class="redsun-subheader">
+        <%= t 'field_issue' %> #<%= highlighter_for(:id, hit, record) %>: in <%= link_to record.try(:project).try(:name), record.try(:project) %>
+      </span>
+    <% else %>
+      <%= link_to record  do %>
+        <%= t 'field_issue' %> #<%= highlighter_for(:id, hit, record) %>: <%= highlighter_for(:subject, hit, record) %>
+      <% end %>
+      <span class="redsun-subheader">In <%= link_to record.try(:project).try(:name), record.try(:project) %></span>
+  <% end %>
 </h3>
-<% if record.created_on && record.author %>
-  <h5>
-    <%= avatar(record.author, :size => "16") %> <%= authoring(record.created_on, record.author )%>
-  </h5>
-<% end %>
+
 <p>
   <%= sanitize highlighter_for(:description, hit, record), tags: %w(span b strong a), attributes: %w(class id style href target) %>
   <%= sanitize highlighter_for(:comments, hit, record), tags: %w(span b strong a), attributes: %w(class id style href target) %>
 </p>
+
+<h5>
+  <%= redsun_inactive_badge(record) %>
+  <span class="redsun-badge badge badge-status-<%=record.closed? ? "closed" : "open" %>"><%=record.status %></span>
+  <%=link_to_user(record.author)%>
+      | <%= l("redsun.label_added_time_by", age: time_tag(record.created_on)).html_safe %>
+    <% if record.updated_on %>
+      | <%= l(:label_updated_time, time_tag(record.updated_on)).html_safe %>
+    <% end %>
+
+  <% if record.tags.any? %>
+      <%- record.tags.map(&:name).reverse.map do |tag| %>
+        <span class="redsun-badge badge redsun-tag"><%=tag %></span>
+      <% end %>
+  <% end %>
+</h5>
+
+
+
