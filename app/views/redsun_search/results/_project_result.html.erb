@@ -1,8 +1,13 @@
-<h5><%= t "redsun.project" %></small></h5>
-<h3><%= link_to highlighter_for(:name, hit, record), record %></h3>
-<h5>
-  <%= authoring(record.created_on, nil )%>
-</h5>
+<h3>
+  <%= link_to record do %>
+    <%= "#{t('label_project')}: " unless short_search_result_title?(record) %><%= highlighter_for(:name, hit, record) %>
+  <% end %>
+</h3>
+
 <p>
   <%= sanitize highlighter_for(:description, hit, record), tags: %w(span b strong a), attributes: %w(class id style href target) %>
 </p>
+<h5>
+  <%= redsun_inactive_badge(record) %>
+  <%= l("redsun.label_added_time_by", age: time_tag(record.created_on)).html_safe %>
+</h5>
