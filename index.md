@@ -10,7 +10,6 @@ Redsun will respect any viewing restrictions on records to make sure people will
 
 Install https://redmine.org/plugins/redmine__select2 first.
 
-
 #### Models
 
 The following models are being indexed. We plan to add more models with future releases.
@@ -41,17 +40,22 @@ Currently, only German and English are being supported.
 
 #### Supported Redmine Versions
 
-#### Redmine 2.x
+#### Redmine 6+
 
-We have successfully used Redsun 1.0.3 with Redmine 2.3-2.6.
+Use Redsun >= 2.8.0 and Solr 9.8+
 
 #### Redmine 3.x 
 
 Please use Redsun >= 1.0.4 if you are using Redmine 3.x
 
+#### Redmine 2.x
+
+We have successfully used Redsun 1.0.3 with Redmine 2.3-2.6.
+
+
 #### Basic Installation
 
-We recommend to test this plugin locally. There is a solrconfig.xml and schema.xml for Solr 4.x in the config folder of the plugin. Please use these files for your Solr server to get running.
+We recommend to test this plugin locally. There is a solrconfig.xml and schema.xml for Solr in the config folder of the plugin. Please use these files for your Solr server to get running.
 Also: For the spellchecker feature to work properly the Solr index has to be optimized. You can do this on the Solr admin interface or on the Rails console with ```Sunspot.optimize```.
 
 * cd into your redmine root folder
@@ -63,6 +67,11 @@ Also: For the spellchecker feature to work properly the Solr index has to be opt
 * bundle exec rake sunspot:solr:reindex
 * restart Redmine
 * enable Redsun within the plugin's settings section
+
+#### Downloads and Links
+
+* ZIP: {{ site.zip_url }}
+* TAR: {{ site.tar_url }}
 
 #### Looking for your Red Sun Redmine Search?
 
