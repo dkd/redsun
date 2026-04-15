@@ -8,7 +8,7 @@ Redsun will respect any viewing restrictions on records to make sure people will
 
 #### select2 Support
 
-Install https://redmine.org/plugins/redmine__select2 first.
+Install the [Redmine Select2 Plugin]([https://link-url-here.org](https://redmine.org/plugins/redmine__select2)).
 
 #### Models
 
@@ -68,10 +68,10 @@ Also: For the spellchecker feature to work properly the Solr index has to be opt
 * restart Redmine
 * enable Redsun within the plugin's settings section
 
-#### Downloads and Links
+#### Downloads
 
-* ZIP: {{ site.zip_url }}
-* TAR: {{ site.tar_url }}
+* [ZIP-Archive]({{ site.zip_url }})
+* [TAR-Archive]({{ site.tar_url }})
 
 #### Looking for your Red Sun Redmine Search?
 
